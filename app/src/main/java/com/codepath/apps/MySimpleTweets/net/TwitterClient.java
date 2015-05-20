@@ -2,12 +2,16 @@ package com.codepath.apps.MySimpleTweets.net;
 
 import android.content.Context;
 
+import com.codepath.apps.MySimpleTweets.activities.TimelineActivity.TimelineParams;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
+
+import java.util.HashMap;
+import java.util.Set;
 
 /*
  * 
@@ -45,12 +49,20 @@ public class TwitterClient extends OAuthBaseClient {
 	// METHOD == ENDPOINT
 
 	// Home Timeline - Gets us the home timeline
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(HashMap<String, String> endpointKeyMap, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
-		// Specify params
-		params.put("count", 25);
-		params.put("since_id", 1);
+		Set<String> keys = endpointKeyMap.keySet();
+		for (String key : keys) {
+			if (key.equals(TimelineParams.COUNT.toString())) {
+				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
+			} else {
+				String value = endpointKeyMap.get(key);
+				if (value != null) {
+					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
+				}
+			}
+		}
 		// Execute the request
 		getClient().get(apiUrl, params, handler);
 	}
