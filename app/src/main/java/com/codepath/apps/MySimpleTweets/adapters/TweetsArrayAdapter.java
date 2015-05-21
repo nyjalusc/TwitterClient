@@ -20,6 +20,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     // ViewHolder Pattern
     private static class ViewHolder {
         ImageView ivProfileImage;
+        TextView tvRelativeTime;
         TextView tvUserName;
         TextView tvBody;
     }
@@ -37,6 +38,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.tvRelativeTime = (TextView) convertView.findViewById(R.id.tvRelativeTime);
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             convertView.setTag(viewHolder);
@@ -47,6 +49,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         // Remove old image and set a new one
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(viewHolder.ivProfileImage);
+        viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvUserName.setText(tweet.getUser().getScreenName());
         return convertView;

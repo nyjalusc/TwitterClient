@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets.net;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.apps.MySimpleTweets.activities.TimelineActivity.TimelineParams;
 import com.codepath.oauth.OAuthBaseClient;
@@ -55,14 +56,17 @@ public class TwitterClient extends OAuthBaseClient {
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
 			if (key.equals(TimelineParams.COUNT.toString())) {
+				Log.d("DEBUG COUNT", endpointKeyMap.get(key).toString());
 				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
 			} else {
 				String value = endpointKeyMap.get(key);
 				if (value != null) {
+					Log.d("DEBUG", endpointKeyMap.get(key).toString());
 					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
 				}
 			}
 		}
+		Log.d("DEBUG", "executing");
 		// Execute the request
 		getClient().get(apiUrl, params, handler);
 	}

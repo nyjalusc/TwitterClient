@@ -1,5 +1,7 @@
 package com.codepath.apps.MySimpleTweets.models;
 
+import com.codepath.apps.MySimpleTweets.Helpers.RelativeDate;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,11 +12,17 @@ import java.util.ArrayList;
  * This class is responsible for parsing the JSONObject, deseriablizing it and converting it into a
  * java object.
  */
+
+/**
+ *
+ */
 public class Tweet {
     private String body;
     private long uid; // Unique id for the tweet; Not userid
     private User user;
     private String createdAt;
+
+    RelativeDate relativeDate;
 
     public User getUser() {
         return user;
@@ -30,6 +38,12 @@ public class Tweet {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    // Gets the relative timestamp eg. 45m (45 minutes)
+    public String getRelativeTime() {
+        relativeDate = new RelativeDate();
+        return relativeDate.getRelativeTimeAgo(this.createdAt);
     }
 
     // Deserialize JSON and build tweet objects
