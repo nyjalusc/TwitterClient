@@ -31,7 +31,7 @@ public class TimelineActivity extends ActionBarActivity {
     private ListView lvTweets;
     private ConnectivityChecker connectivityChecker;
     private HashMap<String, String> endpointKeyMap;
-    private int DEFAULT_COUNT = 10;
+    private int DEFAULT_COUNT = 100;
     // List of Tweets received in the last GET request
     private ArrayList<Tweet> parsedResponse;
 
