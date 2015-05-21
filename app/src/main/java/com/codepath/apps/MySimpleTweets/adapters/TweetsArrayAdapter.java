@@ -21,7 +21,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     private static class ViewHolder {
         ImageView ivProfileImage;
         TextView tvRelativeTime;
-        TextView tvUserName;
+        TextView tvName;
+        TextView tvScreenName;
         TextView tvBody;
     }
 
@@ -39,19 +40,22 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvRelativeTime = (TextView) convertView.findViewById(R.id.tvRelativeTime);
-            viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+            viewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
+            viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         // 3. Set values on subviews
         // Remove old image and set a new one
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(viewHolder.ivProfileImage);
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());
-        viewHolder.tvUserName.setText(tweet.getUser().getScreenName());
+        viewHolder.tvName.setText(tweet.getUser().getName());
+        viewHolder.tvScreenName.setText(tweet.getUser().getScreenName());
         return convertView;
     }
 }

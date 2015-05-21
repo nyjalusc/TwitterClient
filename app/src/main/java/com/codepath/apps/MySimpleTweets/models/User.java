@@ -7,6 +7,11 @@ import org.json.JSONObject;
  * Created by naugustine on 5/19/15.
  */
 public class User {
+    private String name;
+    private long uid;
+    private String screenName;
+    private String profileImageUrl;
+
     public String getName() {
         return name;
     }
@@ -22,11 +27,6 @@ public class User {
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
-
-    private String name;
-    private long uid;
-    private String screenName;
-    private String profileImageUrl;
 
     public static User fromJSON(JSONObject json) {
         User user = new User();
