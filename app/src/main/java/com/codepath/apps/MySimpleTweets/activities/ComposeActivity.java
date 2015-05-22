@@ -42,6 +42,7 @@ public class ComposeActivity extends ActionBarActivity {
         setupListener();
     }
 
+    // Listener to update the textview that shows the numbers of characters left in a tweet message
     private void setupListener() {
         etMessage.addTextChangedListener(new TextWatcher() {
             @Override
@@ -52,11 +53,9 @@ public class ComposeActivity extends ActionBarActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Update the Characters count in the toolbar
-                if (count > 0) {
-                    remainingChars--;
-                } else {
-                    remainingChars++;
-                }
+                // count = 1 when a char key is pressed; 0 if backspace is pressed
+                // count can only only have two values: 0 or 1
+                remainingChars = (count > 0) ? remainingChars - 1 : remainingChars + 1;
                 tvCharCount.setText(remainingChars + "");
             }
 
