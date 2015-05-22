@@ -47,7 +47,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
         // 3. Set values on subviews
         // Remove old image and set a new one
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
@@ -56,6 +55,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText(tweet.getUser().getScreenName());
+
         return convertView;
     }
 }
