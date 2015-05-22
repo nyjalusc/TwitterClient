@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/etMessage"
         android:hint="@string/compose_hint"
-
+        android:maxLength="@integer/tweet_char_limit"
         android:textColor="@color/black"
         android:layout_below="@+id/ivProfileImage"
         android:layout_alignLeft="@+id/ivProfileImage"

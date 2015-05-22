@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,17 +28,49 @@ public class ComposeActivity extends ActionBarActivity {
 
     private TwitterClient client;
     private User currentUser;
+    private EditText etMessage;
+    private TextView tvCharCount;
+    private int remainingChars;
+    private static final int TWEET_CHAR_LIMIT = 140;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         init();
 //        getUserDetail();
+        setupListener();
+    }
+
+    private void setupListener() {
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Update the Characters count in the toolbar
+                if (count > 0) {
+                    remainingChars--;
+                } else {
+                    remainingChars++;
+                }
+                tvCharCount.setText(remainingChars + "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private void init() {
+        remainingChars = TWEET_CHAR_LIMIT;
         initToolbar();
         client = new TwitterClient(this);
+        etMessage = (EditText) findViewById(R.id.etMessage);
     }
 
     // Toolbar is a replacement to the older actionbar
@@ -51,6 +85,8 @@ public class ComposeActivity extends ActionBarActivity {
 
         // Add a textview to the toolbar
         View actionbar_count = getLayoutInflater().inflate(R.layout.actionbar_view, null);
+        tvCharCount = (TextView) actionbar_count.findViewById(R.id.tvCharCount);
+        tvCharCount.setText(remainingChars + "");
         toolbar.addView(actionbar_count);
     }
 
@@ -86,7 +122,7 @@ public class ComposeActivity extends ActionBarActivity {
         TextView tvScreenName = (TextView) findViewById(R.id.tvScreenName);
         tvScreenName.setText(currentUser.getScreenName());
 
-        EditText etMessage = (EditText) findViewById(R.id.etMessage);
+
         etMessage.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(etMessage, InputMethodManager.SHOW_IMPLICIT);
