@@ -79,7 +79,7 @@ public class ComposeActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         // Set the home icon on toolbar
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
+        actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setIcon(R.drawable.ic_twitter_home);
 
         // Add a textview to the toolbar
