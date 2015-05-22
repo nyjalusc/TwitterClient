@@ -58,6 +58,7 @@
         <activity
             android:name=".activities.ComposeActivity"
             android:label="@string/title_activity_compose"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".activities.TimelineActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

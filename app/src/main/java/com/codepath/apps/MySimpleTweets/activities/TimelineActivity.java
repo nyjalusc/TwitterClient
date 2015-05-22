@@ -65,7 +65,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-        populateTimeline();
+//        populateTimeline();
     }
 
     // Initialize properties
@@ -120,29 +120,10 @@ public class TimelineActivity extends ActionBarActivity {
                 }
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                populateTimeline();
+                //populateTimeline();
             }
         });
     }
-
-//    // Invokes the searchClient to execute the request
-//    private void loadTweets() {
-//        // Execute GET request
-//        client.getHomeTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                // Load the models in adapter; this will also modify the data in underlying datasource
-//                // No need to use notifyDataSetChanged() if using this method
-//                parsedResponse = Tweet.fromJSONArray(response);
-//                aTweets.addAll(parsedResponse);
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-////                showAlertDialog("Sorry!", "Failed to fetch results");
-//            }
-//        });
-//    }
 
     // Sends request and fills the listview by creating the tweet objects from json
     private void populateTimeline() {
