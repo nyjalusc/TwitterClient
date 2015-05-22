@@ -3,9 +3,6 @@ package com.codepath.apps.MySimpleTweets.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by naugustine on 5/19/15.
- */
 public class User {
     private String name;
     private long uid;
@@ -21,7 +18,7 @@ public class User {
     }
 
     public String getScreenName() {
-        return screenName;
+        return "@" + screenName;
     }
 
     public String getProfileImageUrl() {

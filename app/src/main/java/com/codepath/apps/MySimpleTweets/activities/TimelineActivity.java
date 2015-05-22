@@ -1,5 +1,6 @@
 package com.codepath.apps.MySimpleTweets.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,7 @@ public class TimelineActivity extends ActionBarActivity {
     private ConnectivityChecker connectivityChecker;
     private HashMap<String, String> endpointKeyMap;
     private int DEFAULT_COUNT = 100;
+    private final int REQUEST_CODE = 20;
     // List of Tweets received in the last GET request
     private ArrayList<Tweet> parsedResponse;
 
@@ -190,9 +192,15 @@ public class TimelineActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_compose) {
-            return true;
+            launchComposeActivity();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchComposeActivity() {
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        startActivityForResult(i, REQUEST_CODE);
+
     }
 }
