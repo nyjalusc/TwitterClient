@@ -2,6 +2,7 @@ package com.codepath.apps.MySimpleTweets.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +68,7 @@ public class TimelineActivity extends ActionBarActivity {
 
     // Initialize properties
     private void init() {
+        initToolbar();
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(this, tweets);
@@ -76,6 +78,16 @@ public class TimelineActivity extends ActionBarActivity {
         client = TwitterApplication.getRestClient();
         // initialize Endpoint keymap store
         initEndpointKeyMap();
+    }
+
+    // Toolbar is a replacement to the older actionbar
+    private void initToolbar() {
+        // Set a toolbar to replace the action bar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Set the home icon on toolbar
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_twitter_home);
     }
 
     // Initialize Endpoint KeyMap
@@ -177,7 +189,7 @@ public class TimelineActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_compose) {
             return true;
         }
 
