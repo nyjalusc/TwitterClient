@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.codepath.apps.MySimpleTweets.Helpers.DbHelper;
 import com.codepath.apps.MySimpleTweets.R;
 import com.codepath.apps.MySimpleTweets.adapters.TweetsArrayAdapter;
 import com.codepath.apps.MySimpleTweets.interfaces.EndlessScrollListener;
@@ -65,7 +66,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-//        populateTimeline();
+        populateTimeline();
     }
 
     // Initialize properties
@@ -73,6 +74,10 @@ public class TimelineActivity extends ActionBarActivity {
         initToolbar();
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
+
+        // First read from the database and populate the UI with tweets
+        Log.d("DEBUG", "READING FROM DB");
+        tweets.addAll(Tweet.getAllTweets());
         aTweets = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
         connectivityChecker = new ConnectivityChecker();
@@ -120,7 +125,7 @@ public class TimelineActivity extends ActionBarActivity {
                 }
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                //populateTimeline();
+                populateTimeline();
             }
         });
     }
@@ -130,9 +135,22 @@ public class TimelineActivity extends ActionBarActivity {
         client.getHomeTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // If the request succeeds clear the database first
+                if (endpointKeyMap.get(TimelineParams.MAX_ID.toString()) == null) {
+                    // Clear the database
+                    DbHelper.clearDb();
+                }
                 parsedResponse = Tweet.fromJSONArray(response);
+                // This if block is intentionally kept separate from the above if block
+                // it is to reduce to delay on UI thread. Because UI refreshes as soon as
+                // contents in the adapter change. So, clear and refilling the adapter should
+                // happen back to back.
+                if (endpointKeyMap.get(TimelineParams.MAX_ID.toString()) == null) {
+                    // This should happen only if the first request request is successfull
+                    aTweets.clear();
+                }
                 aTweets.addAll(parsedResponse);
-                Log.d("DEBUG", aTweets.toString());
+                Log.d("DEBUG", aTweets.getCount() + "");
                 // After finishing the first request it is important to set the endpoint params
                 // correctly to issue subsequent requests
                 setValueOfEndpointParams();
@@ -140,7 +158,7 @@ public class TimelineActivity extends ActionBarActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
+//                Log.d("DEBUG", errorResponse.toString());
             }
         });
 

@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,9 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         // 3. Set values on subviews
         // Remove old image and set a new one
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+        if (tweet.getUser() == null) {
+            Log.d("DEBUG", "Found null user");
+        }
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(viewHolder.ivProfileImage);
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());

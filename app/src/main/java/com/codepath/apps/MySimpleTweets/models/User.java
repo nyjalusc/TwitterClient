@@ -1,12 +1,22 @@
 package com.codepath.apps.MySimpleTweets.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+@Table(name = "Users")
+public class User extends Model {
+    @Column(name = "uid", unique = true, index = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private long uid; // Unique id of the user
+    @Column(name = "name")
     private String name;
-    private long uid;
+    @Column(name = "screen_name")
     private String screenName;
+    @Column(name = "profile_image_url")
     private String profileImageUrl;
 
     public String getName() {
@@ -32,9 +42,23 @@ public class User {
             user.uid = json.getLong("id");
             user.screenName = json.getString("screen_name");
             user.profileImageUrl = json.getString("profile_image_url");
+            // Save if New User
+            user = saveIfNewUser(user);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return user;
+    }
+
+    // Save user object if it doesn't already exist
+    private static User saveIfNewUser(User user) {
+        User existingUser =
+                new Select().from(User.class).where("uid= ?", user.uid).executeSingle();
+        if (existingUser != null) {
+            // The existing user's id will be stored in the foreign column of parent table.
+            return existingUser;
+        }
+        user.save();
         return user;
     }
 }
