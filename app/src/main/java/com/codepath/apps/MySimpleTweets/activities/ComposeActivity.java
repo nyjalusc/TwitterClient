@@ -158,7 +158,7 @@ public class ComposeActivity extends ActionBarActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 // Create a tweet object and pass it to the parent activity
-                // to update the listview; This is a hack to quicly update the listview
+                // to update the listview; This is a hack to quickly update the listview
                 // without waiting for the current tweet to show up in Twitter's API
                 Tweet tweet = constructTweet(tweetText);
                 Intent data = new Intent();

@@ -90,7 +90,9 @@ public class Tweet extends Model implements Serializable {
                 Tweet tweet = Tweet.fromJSON(tweetJson);
                 if (tweet != null) {
                     tweet = saveIfNewTweet(tweet);
-                    tweets.add(tweet);
+                    if (tweet != null) {
+                        tweets.add(tweet);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -104,7 +106,10 @@ public class Tweet extends Model implements Serializable {
         Tweet existingTweet =
                 new Select().from(Tweet.class).where("uid= ?", tweet.uid).executeSingle();
         if (existingTweet != null) {
-            return existingTweet;
+            // Return null to avoid populating duplicate tweets in the listview
+            // This will make the logic simpler because the UI should simply show whatever
+            // is saved in the db. Handling od duplicate tweets is done here.
+            return null;
         }
         // It is important to note that user object is saved before the parent object gets saved
         tweet.save();
@@ -118,5 +123,11 @@ public class Tweet extends Model implements Serializable {
                 .execute();
         Log.d("DEBUG", "Objects read from the db:" + result.size());
         return result;
+    }
+
+    public static int countTweets() {
+        return new Select()
+                .from(Tweet.class)
+                .count();
     }
 }
