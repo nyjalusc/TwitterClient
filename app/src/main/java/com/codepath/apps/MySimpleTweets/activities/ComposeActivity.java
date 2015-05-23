@@ -167,6 +167,8 @@ public class ComposeActivity extends ActionBarActivity {
                 // Activity finished ok, return the data
                 setResult(RESULT_OK, data); // set result code and bundle data for response
                 finish(); // closes the activity, pass data to parent
+                // Apply Bottom-up transition
+                overridePendingTransition(R.animator.slide_out_up, R.animator.slide_in_up);
             }
 
             @Override

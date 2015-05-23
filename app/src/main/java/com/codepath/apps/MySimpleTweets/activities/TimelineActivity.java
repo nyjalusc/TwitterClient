@@ -204,6 +204,8 @@ public class TimelineActivity extends ActionBarActivity {
     private void launchComposeActivity() {
         Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
         startActivityForResult(i, REQUEST_CODE);
+        // Apply Bottom-up transition
+        overridePendingTransition(R.animator.slide_in_up, R.animator.slide_out_up);
     }
 
     // Result from the compose activity needs to be added to the adapter to update the view
