@@ -53,6 +53,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public void getHomeTimeline(HashMap<String, String> endpointKeyMap, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
+		Log.d("DEBUG ", "Preparing params..");
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
 			if (key.equals(TimelineParams.COUNT.toString())) {
@@ -61,7 +62,7 @@ public class TwitterClient extends OAuthBaseClient {
 			} else {
 				String value = endpointKeyMap.get(key);
 				if (value != null) {
-					Log.d("DEBUG", endpointKeyMap.get(key).toString());
+					Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
 					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
 				}
 			}

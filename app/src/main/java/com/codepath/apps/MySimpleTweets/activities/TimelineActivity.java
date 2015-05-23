@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -69,7 +68,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-        populateTimeline();
+        populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }
 
@@ -80,7 +79,6 @@ public class TimelineActivity extends ActionBarActivity {
         tweets = new ArrayList<>();
 
         // First read from the database and populate the UI with tweets
-        Log.d("DEBUG", "READING FROM DB");
         tweets.addAll(Tweet.getAllTweets());
         aTweets = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
@@ -115,10 +113,7 @@ public class TimelineActivity extends ActionBarActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-
                 fetchTimelineAsync();
             }
         });
@@ -129,7 +124,9 @@ public class TimelineActivity extends ActionBarActivity {
                 android.R.color.holo_red_light);
     }
 
-    // Returns the first visible tweet
+    // Returns the first visible tweet and makes sure it has a valid Uid
+    // This check is essential so that we don't mistakenly use the fake tweet object for making a
+    // request
     private Tweet getFirstTweet() {
         for (int i = 0; i < tweets.size(); i++) {
             Tweet tweet = aTweets.getItem(i);
@@ -148,52 +145,38 @@ public class TimelineActivity extends ActionBarActivity {
         endpointKeyMap.put(TimelineParams.SINCE_ID.toString(), getFirstTweet().getUid() + "");
         // reset max_id to null
         endpointKeyMap.put(TimelineParams.MAX_ID.toString(), null);
-        client.getHomeTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // If during refresh we get DEFAULT_COUNT number of tweets then we clear the DB and
-                // force the user to navigate and repopulate the DB. This will make the logic much more
-                // simpler. User is guaranteed fresh data every single time. This situation can arise
-                // when the application is alive but is not used by the user for quite some time.
-                if (response.length() >= DEFAULT_COUNT) {
-                    DbHelper.clearDb();
-                }
-                parsedResponse = Tweet.fromJSONArray(response);
-                Log.d("DEBUG", "Number of Tweets fetched in Refresh: " + parsedResponse.size());
-                if (parsedResponse.size() >= DEFAULT_COUNT) {
-                    resetAdapterWithNewTweets(parsedResponse);
-                } else {
-                    appendTweets(parsedResponse);
-                }
-                // Signal that refresh has ended
-                swipeContainer.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", throwable.toString());
-            }
-        });
+        // DB will be cleared only if during a refresh we get DEFAULT_COUNT number of tweets; If that is true
+        // then it means that the user is loading the app after a long time, it is better to clear all the old
+        // tweets and start with a clean slate.
+        populateTimelineAndAppendInBeginning(true);
+        swipeContainer.setRefreshing(false);
     }
 
     // Resets the UI with fresh new tweets
     private void resetAdapterWithNewTweets(ArrayList<Tweet> newTweets) {
         aTweets.clear();
-        tweets.clear();
-        tweets.addAll(newTweets);
-        aTweets.notifyDataSetChanged();
+        aTweets.addAll(newTweets);
     }
 
     // Append new tweets at the beginning of the list
-    private void appendTweets(ArrayList<Tweet> newTweets) {
-        for (int i = newTweets.size() - 1; i >= 0; i--) {
-            // Keep adding tweet objects in the front of the list
-            tweets.add(0, newTweets.get(i));
+    private void appendTweets(ArrayList<Tweet> newTweets, boolean end) {
+        if (end) {
+            tweets.addAll(newTweets);
+        } else {
+            addAtTheBeginning(newTweets);
         }
         // Update the adapter
         aTweets.notifyDataSetChanged();
     }
 
+    // Add Tweets at the front
+    private void addAtTheBeginning(ArrayList<Tweet> newTweets) {
+        // Tweets are arraned in chronological order; so parse it from the end.
+        for (int i = newTweets.size() - 1; i >= 0; i--) {
+            // Keep adding tweet objects in the front of the list
+            tweets.add(0, newTweets.get(i));
+        }
+    }
 
     // Check for network connectivity
     private boolean networkCheck() {
@@ -214,46 +197,46 @@ public class TimelineActivity extends ActionBarActivity {
                     return;
                 }
                 // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to your AdapterView
                 setValueOfEndpointParams();
-                populateTimeline();
+                populateTimelineAndAppendAtEnd(false);
             }
         });
     }
 
+    private void populateTimelineAndAppendAtEnd(boolean clearDb) {
+        populateTimeline(clearDb, true);
+    }
+
+    private void populateTimelineAndAppendInBeginning(boolean clearDb) {
+        populateTimeline(clearDb, false);
+    }
+
     // Sends request and fills the listview by creating the tweet objects from json
-    private void populateTimeline() {
+    // NOTE: It is the responsibility of the caller to correctly configure the params before
+    // calling this method
+    private void populateTimeline(final boolean clearDb, final boolean appendEnd) {
         client.getHomeTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // If the request succeeds clear the database first
-                if (endpointKeyMap.get(TimelineParams.MAX_ID.toString()) == null) {
-                    // Clear the database
+                // This is true when the application loads for the first time.
+                // Done to fill the view and DB with latest tweet objects
+                if (response.length() >= DEFAULT_COUNT && clearDb) {
                     DbHelper.clearDb();
                 }
                 parsedResponse = Tweet.fromJSONArray(response);
-                // This if block is intentionally kept separate from the above if block
-                // it is to reduce to delay on UI thread. Because UI refreshes as soon as
+                // This if block is intentionally kept separate from the above if block.
+                // It is to reduce to delay on UI thread, because UI refreshes as soon as
                 // contents in the adapter change. So, clear and refilling the adapter should
                 // happen back to back.
-                if (endpointKeyMap.get(TimelineParams.MAX_ID.toString()) == null) {
-                    // This should happen only if the first request request is successfull
-                    // Keep both the data-structures in sync; This will come in handy to later add
-                    // one tweet in the beginning of the list
-                    aTweets.clear();
-                    tweets.clear();
+                if (parsedResponse.size() >= DEFAULT_COUNT && clearDb) {
+                    resetAdapterWithNewTweets(parsedResponse);
+                } else {
+                    appendTweets(parsedResponse, appendEnd);
                 }
-                aTweets.addAll(parsedResponse);
-                tweets.addAll(parsedResponse);
-                Log.d("DEBUG", aTweets.getCount() + "");
-                // After finishing the first request it is important to set the endpoint params
-                // correctly to issue subsequent requests
-                setValueOfEndpointParams();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                Log.d("DEBUG", errorResponse.toString());
             }
         });
 
