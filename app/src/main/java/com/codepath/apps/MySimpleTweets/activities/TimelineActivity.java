@@ -147,9 +147,13 @@ public class TimelineActivity extends ActionBarActivity {
                 // happen back to back.
                 if (endpointKeyMap.get(TimelineParams.MAX_ID.toString()) == null) {
                     // This should happen only if the first request request is successfull
+                    // Keep both the data-structures in sync; This will come in handy to later add
+                    // one tweet in the beginning of the list
                     aTweets.clear();
+                    tweets.clear();
                 }
                 aTweets.addAll(parsedResponse);
+                tweets.addAll(parsedResponse);
                 Log.d("DEBUG", aTweets.getCount() + "");
                 // After finishing the first request it is important to set the endpoint params
                 // correctly to issue subsequent requests
@@ -200,6 +204,17 @@ public class TimelineActivity extends ActionBarActivity {
     private void launchComposeActivity() {
         Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
         startActivityForResult(i, REQUEST_CODE);
+    }
 
+    // Result from the compose activity needs to be added to the adapter to update the view
+    // This is a hack to quickly update the view without waiting for the tweet to appear in the
+    // Twitter's api
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
+            tweets.add(0, tweet);
+            aTweets.notifyDataSetChanged();
+        }
     }
 }

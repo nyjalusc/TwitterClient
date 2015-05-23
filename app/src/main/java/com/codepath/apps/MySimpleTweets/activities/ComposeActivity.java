@@ -1,12 +1,14 @@
 package com.codepath.apps.MySimpleTweets.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.MySimpleTweets.Helpers.RelativeDate;
 import com.codepath.apps.MySimpleTweets.R;
+import com.codepath.apps.MySimpleTweets.models.Tweet;
 import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +37,8 @@ public class ComposeActivity extends ActionBarActivity {
     private TextView tvCharCount;
     private int remainingChars;
     private static final int TWEET_CHAR_LIMIT = 140;
+    private RelativeDate relativeDate;
+    private String tweetText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class ComposeActivity extends ActionBarActivity {
         initToolbar();
         client = new TwitterClient(this);
         etMessage = (EditText) findViewById(R.id.etMessage);
+        relativeDate = new RelativeDate();
     }
 
     // Toolbar is a replacement to the older actionbar
@@ -135,10 +143,44 @@ public class ComposeActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.action_send) {
+            Log.d("DEBUG", "Clicked");
+            postTweet();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void postTweet() {
+        tweetText = etMessage.getText().toString();
+        client.postTweet(tweetText, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                // Create a tweet object and pass it to the parent activity
+                // to update the listview; This is a hack to quicly update the listview
+                // without waiting for the current tweet to show up in Twitter's API
+                Tweet tweet = constructTweet(tweetText);
+                Intent data = new Intent();
+                data.putExtra("tweet", tweet);
+                data.putExtra("code", 200);
+                // Activity finished ok, return the data
+                setResult(RESULT_OK, data); // set result code and bundle data for response
+                finish(); // closes the activity, pass data to parent
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d("DEBUG FAILED", statusCode + "");
+            }
+        });
+    }
+
+    private Tweet constructTweet(String status) {
+        Tweet tweet = new Tweet();
+        tweet.setBody(status);
+        tweet.setUser(currentUser);
+        tweet.setCreatedAt(relativeDate.createDateInTwitterFormat());
+        return tweet;
     }
 }

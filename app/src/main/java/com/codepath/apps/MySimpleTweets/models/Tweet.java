@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 
 @Table(name = "Tweets")
-public class Tweet extends Model {
+public class Tweet extends Model implements Serializable {
     @Column(name = "uid", unique = true, index = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid; // Unique id for the tweet; Not userid
     @Column(name = "body")
@@ -37,8 +38,16 @@ public class Tweet extends Model {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getBody() {
         return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public long getUid() {
@@ -47,6 +56,10 @@ public class Tweet extends Model {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     // Gets the relative timestamp eg. 45m (45 minutes)

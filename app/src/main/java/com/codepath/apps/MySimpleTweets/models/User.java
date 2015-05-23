@@ -8,8 +8,10 @@ import com.activeandroid.query.Select;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 @Table(name = "Users")
-public class User extends Model {
+public class User extends Model implements Serializable {
     @Column(name = "uid", unique = true, index = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid; // Unique id of the user
     @Column(name = "name")
@@ -23,6 +25,10 @@ public class User extends Model {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public long getUid() {
         return uid;
     }
@@ -31,8 +37,16 @@ public class User extends Model {
         return "@" + screenName;
     }
 
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
     public String getProfileImageUrl() {
         return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public static User fromJSON(JSONObject json) {

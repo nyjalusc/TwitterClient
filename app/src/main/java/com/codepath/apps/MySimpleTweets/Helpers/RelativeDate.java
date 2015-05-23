@@ -4,6 +4,7 @@ import android.text.format.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class RelativeDate {
@@ -31,5 +32,11 @@ public class RelativeDate {
         result.append(words[0]);
         result.append(words[1].charAt(0));
         return result.toString();
+    }
+
+    public String createDateInTwitterFormat() {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        return sf.format(new Date());
     }
 }
