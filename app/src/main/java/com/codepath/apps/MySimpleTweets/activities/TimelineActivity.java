@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +42,10 @@ public class TimelineActivity extends ActionBarActivity {
     private ArrayList<Tweet> parsedResponse;
     private SwipeRefreshLayout swipeContainer;
 
+    public void retweet(View view) {
+        Tweet tweet = (Tweet) view.getTag();
+    }
+
 
     // Add new params to this class
     public enum TimelineParams {
@@ -68,7 +74,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-//        populateTimelineAndAppendAtEnd(true);
+        populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }
 
@@ -220,15 +226,18 @@ public class TimelineActivity extends ActionBarActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // This is true when the application loads for the first time.
                 // Done to fill the view and DB with latest tweet objects
-                if (response.length() >= DEFAULT_COUNT && clearDb) {
+                // (DEFAULT_COUNT - 1) is used to handle the case where endpoint returns 99 objects even though
+                // the COUNT in request was 100
+                if (response.length() >= (DEFAULT_COUNT - 1) && clearDb) {
                     DbHelper.clearDb();
+                    Log.d("DEBUG", "Cleared the db");
                 }
                 parsedResponse = Tweet.fromJSONArray(response);
                 // This if block is intentionally kept separate from the above if block.
                 // It is to reduce to delay on UI thread, because UI refreshes as soon as
                 // contents in the adapter change. So, clear and refilling the adapter should
                 // happen back to back.
-                if (parsedResponse.size() >= DEFAULT_COUNT && clearDb) {
+                if (parsedResponse.size() >= (DEFAULT_COUNT - 1) && clearDb) {
                     resetAdapterWithNewTweets(parsedResponse);
                 } else {
                     appendTweets(parsedResponse, appendEnd);

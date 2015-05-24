@@ -25,10 +25,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <meta-data android:name="AA_DB_NAME" android:value="MySimpleTweets16.db" />
+        <meta-data android:name="AA_DB_NAME" android:value="MySimpleTweets17.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
         <!-- Speed up application startup by mentioning models directly in the manifest file -->
-        <!--<meta-data android:name="AA_MODELS" android:value="com.example.naugustine.gridimagesearch.models.AdvancedFilters" />-->
+        <meta-data android:name="AA_MODELS_TWEET" android:value="com.codepath.apps.MySimpleTweets.models.Tweet" />
+        <meta-data android:name="AA_MODELS_USER" android:value="com.codepath.apps.MySimpleTweets.models.User" />
+        <meta-data android:name="AA_MODELS_IMAGE" android:value="com.codepath.apps.MySimpleTweets.models.Image" />
 
         <activity
             android:name=".activities.LoginActivity"

@@ -37,6 +37,10 @@ public class Tweet extends Model implements Serializable {
     private int retweetCount;
     @Column(name="favorite_count")
     private int favoriteCount;
+    @Column(name="retweeted")
+    private boolean retweeted;
+    @Column(name="favorited")
+    private boolean favorited;
     private RelativeDate relativeDate;
 
     public Image getImage() {
@@ -79,6 +83,22 @@ public class Tweet extends Model implements Serializable {
         return favoriteCount + "";
     }
 
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
     // Gets the relative timestamp eg. 45m (45 minutes)
     public String getRelativeTime() {
         relativeDate = new RelativeDate();
@@ -96,9 +116,8 @@ public class Tweet extends Model implements Serializable {
             tweet.image = Image.fromJSON(jsonObject.getJSONObject("entities"));
             tweet.retweetCount = jsonObject.getInt("retweet_count");
             tweet.favoriteCount = jsonObject.getInt("favorite_count");
-            if (tweet.image != null) {
-                Log.d("DEBUG", tweet.image.getSmallImageUrl());
-            }
+            tweet.retweeted = jsonObject.getBoolean("retweeted");
+            tweet.favorited = jsonObject.getBoolean("favorited");
         } catch (JSONException e) {
             e.printStackTrace();
         }

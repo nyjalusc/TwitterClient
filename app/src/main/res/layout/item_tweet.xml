@@ -74,12 +74,12 @@
             android:layout_alignParentLeft="true"
             android:src="@drawable/ic_reply"/>
 
+
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:id="@+id/ivRetweet"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_retweet"/>
+            android:layout_centerHorizontal="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -92,9 +92,8 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/ivFav"
-            android:layout_toLeftOf="@+id/tvFavoritesCount"
-            android:src="@drawable/ic_fav_grey"/>
+            android:id="@+id/ivFavorites"
+            android:layout_toLeftOf="@+id/tvFavoritesCount"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -104,4 +103,5 @@
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
+
 </RelativeLayout>
