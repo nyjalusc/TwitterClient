@@ -25,6 +25,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvScreenName;
         TextView tvBody;
         ImageView ivImage;
+        TextView tvRetweetCount;
+        TextView tvFavoritesCount;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
@@ -45,6 +47,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
+            viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
+            viewHolder.tvFavoritesCount = (TextView) convertView.findViewById(R.id.tvFavoritesCount);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -61,6 +65,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText(tweet.getUser().getScreenName());
+        viewHolder.tvRetweetCount.setText(tweet.getRetweetCount());
+        viewHolder.tvFavoritesCount.setText(tweet.getFavoritesCount());
         // Not all tweets have images; Check if its null before setting the view
         if (tweet.getImage() == null) {
             viewHolder.ivImage.setVisibility(View.GONE);

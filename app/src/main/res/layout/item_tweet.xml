@@ -12,11 +12,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/rlTweetHolder"
+        android:paddingBottom="10dp"
         android:layout_toRightOf="@+id/ivProfileImage">
 
         <TextView
@@ -43,6 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvBody"
+            android:autoLink="all"
+            android:linksClickable="true"
             android:layout_below="@+id/tvName"/>
 
         <ImageView
@@ -52,5 +56,52 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_below="@+id/tvBody"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlTweetHolder"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_marginRight="50dp"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/ivReply"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_reply"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/ivRetweet"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_retweet"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvRetweetCount"
+            android:textColor="@color/grey"
+            android:layout_toRightOf="@+id/ivRetweet"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/ivFav"
+            android:layout_toLeftOf="@+id/tvFavoritesCount"
+            android:src="@drawable/ic_fav_grey"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvFavoritesCount"
+            android:textColor="@color/grey"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 </RelativeLayout>
