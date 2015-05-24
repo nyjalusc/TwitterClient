@@ -31,6 +31,8 @@ public class Tweet extends Model implements Serializable {
     private String createdAt;
     @Column(name = "user", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private User user;
+    @Column(name = "image", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+    private Image image;
 
     private RelativeDate relativeDate;
 
@@ -76,6 +78,10 @@ public class Tweet extends Model implements Serializable {
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.image = Image.fromJSON(jsonObject.getJSONObject("entities"));
+            if (tweet.image != null) {
+                Log.d("DEBUG", tweet.image.getSmallImageUrl());
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
