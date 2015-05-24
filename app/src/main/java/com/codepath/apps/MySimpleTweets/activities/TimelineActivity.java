@@ -68,7 +68,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-        populateTimelineAndAppendAtEnd(true);
+//        populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }
 

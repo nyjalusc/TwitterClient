@@ -1,7 +1,6 @@
 package com.codepath.apps.MySimpleTweets.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvName;
         TextView tvScreenName;
         TextView tvBody;
+        ImageView ivImage;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
@@ -44,6 +44,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+            viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -51,15 +52,26 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         // 3. Set values on subviews
         // Remove old image and set a new one
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
-        if (tweet.getUser() == null) {
-            Log.d("DEBUG", "Found null user");
-        }
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(viewHolder.ivProfileImage);
+        Picasso.with(getContext())
+                .load(tweet.getUser()
+                .getProfileImageUrl())
+                .error(R.drawable.abc_ab_share_pack_holo_dark)
+                .into(viewHolder.ivProfileImage);
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText(tweet.getUser().getScreenName());
-
+        // Not all tweets have images; Check if its null before setting the view
+        if (tweet.getImage() == null) {
+            viewHolder.ivImage.setVisibility(View.GONE);
+        } else {
+            viewHolder.ivImage.setVisibility(View.VISIBLE);
+            viewHolder.ivImage.setImageResource(0);
+            Picasso.with(getContext())
+                    .load(tweet.getImage().getSmallImageUrl())
+                    .error(R.drawable.abc_ab_share_pack_holo_dark)
+                    .into(viewHolder.ivImage);
+        }
         return convertView;
     }
 }

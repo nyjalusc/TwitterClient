@@ -33,8 +33,11 @@ public class Tweet extends Model implements Serializable {
     private User user;
     @Column(name = "image", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private Image image;
-
     private RelativeDate relativeDate;
+
+    public Image getImage() {
+        return image;
+    }
 
     public User getUser() {
         return user;
