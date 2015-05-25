@@ -85,10 +85,20 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().post(apiUrl, params, handler);
 	}
 
-	// id of the tweet that you want to retweet
-	public void postRetweet(String id, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/retweet/") + id + ".json";
+	// id_str of the tweet that you want to retweet
+	// It is important to use the string version and not the long version
+	// The data sent is a part of the url and not a param. It didn't workout when i used a long, str
+	// works fine
+	public void postRetweet(String idStr, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/retweet/") + idStr + ".json";
 		Log.d("DEBUG", "retweet url: " + apiUrl);
+		getClient().post(apiUrl, null, handler);
+	}
+
+	// Deletes a retweet; use id_str
+	public void postDeleteRetweet(String idStr, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/destroy/") + idStr + ".json";
+		Log.d("DEBUG", "Destry retweet url: " + apiUrl);
 		getClient().post(apiUrl, null, handler);
 	}
 

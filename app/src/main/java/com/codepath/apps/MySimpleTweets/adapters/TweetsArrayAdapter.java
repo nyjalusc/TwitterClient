@@ -108,27 +108,40 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             public void onClick(View view) {
                 if (tweet.isRetweeted()) {
                     undoRetweet(tweet);
+                    // Update the view UI to show grey retweet logo and grey retweet count text
+                    ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
+                    ivRetweet.setImageResource(R.drawable.ic_retweet_grey);
+                    TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
+                    tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.grey));
+                    tvRetweetCount.setTypeface(null, Typeface.BOLD);
+                    // Update the new retweet count
+                    tvRetweetCount.setText(tweet.getRetweetCount());
                 } else {
                     postRetweet(tweet);
                     // Update the view UI to show green retweet logo and green colored tweet count text
                     ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
                     ivRetweet.setImageResource(R.drawable.ic_retweet_green);
-
                     TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
                     tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.green));
                     tvRetweetCount.setTypeface(null, Typeface.BOLD);
+                    // Update the new retweet count
+                    tvRetweetCount.setText(tweet.getRetweetCount());
                 }
             }
         });
     }
 
+    // Retweets a tweet
     private void postRetweet(final Tweet tweet) {
         client.postRetweet(tweet.getUidStr(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    tweet.setRetweetId(response.getString("id_str"));
+                    // Retweets are just like tweets. I am only keeping the id_str of the new retweet
+                    // so that when i delete it i should know which retweet i am deleting.
+                    tweet.setRetweetIdStr(response.getString("id_str"));
                     tweet.setRetweeted(true);
+                    tweet.setRetweetCount(response.getInt("retweet_count"));
                     tweet.save();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -137,9 +150,24 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         });
     }
 
-    private void undoRetweet(Tweet tweet) {
+    // Deletes a retweeted tweet
+    private void undoRetweet(final Tweet tweet) {
+        client.postDeleteRetweet(tweet.getRetweetidStr(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    tweet.setRetweetIdStr(null);
+                    tweet.setRetweeted(false);
+                    tweet.setRetweetCount(response.getInt("retweet_count"));
+                    tweet.save();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
+    // Sets up view elements such as reply, retweet and favorite
     private void setupTweetFooter(ViewHolder viewHolder, Tweet tweet) {
         viewHolder.ivRetweet.setImageResource(0);
         viewHolder.tvRetweetCount.setText(tweet.getRetweetCount());

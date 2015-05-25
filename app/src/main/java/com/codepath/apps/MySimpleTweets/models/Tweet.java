@@ -25,8 +25,8 @@ import java.util.List;
 public class Tweet extends Model implements Serializable {
     @Column(name = "uid", unique = true, index = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid; // Unique id for the tweet; Not userid
-    @Column(name = "uid_str")
-    private String uid_str;
+    @Column(name = "uidStr")
+    private String uidStr;
     @Column(name = "body")
     private String body;
     @Column(name = "created_at")
@@ -43,9 +43,22 @@ public class Tweet extends Model implements Serializable {
     private boolean retweeted;
     @Column(name="favorited")
     private boolean favorited;
-    @Column(name="retweetId")
-    private String retweetid;
+    @Column(name="retweetIdStr")
+    private String retweetidStr;
+
     private RelativeDate relativeDate;
+
+    public String getUidStr() {
+        return uidStr;
+    }
+
+    public void setFavoriteCount(int favoriteCount) {
+        this.favoriteCount = favoriteCount;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
 
     public Image getImage() {
         return image;
@@ -55,8 +68,12 @@ public class Tweet extends Model implements Serializable {
         return user;
     }
 
-    public void setRetweetId(String retweetId) {
-        this.retweetid = retweetId;
+    public void setRetweetIdStr(String retweetId) {
+        this.retweetidStr = retweetId;
+    }
+
+    public String getRetweetidStr() {
+        return retweetidStr;
     }
 
     public void setUser(User user) {
@@ -74,8 +91,6 @@ public class Tweet extends Model implements Serializable {
     public long getUid() {
         return uid;
     }
-
-    public String getUidStr() { return uid_str; }
 
     public String getCreatedAt() {
         return createdAt;
@@ -121,7 +136,7 @@ public class Tweet extends Model implements Serializable {
         try {
             tweet.body = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
-            tweet.uid_str = jsonObject.getString("id_str");
+            tweet.uidStr = jsonObject.getString("id_str");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
             tweet.image = Image.fromJSON(jsonObject.getJSONObject("entities"));

@@ -68,6 +68,7 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
+        DbHelper.clearDb();
         populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }
@@ -226,6 +227,7 @@ public class TimelineActivity extends ActionBarActivity {
                     DbHelper.clearDb();
                     Log.d("DEBUG", "Cleared the db");
                 }
+                Log.d("DEBUG", "Number of tweets fetched: " + response.length());
                 parsedResponse = Tweet.fromJSONArray(response);
                 // This if block is intentionally kept separate from the above if block.
                 // It is to reduce to delay on UI thread, because UI refreshes as soon as
