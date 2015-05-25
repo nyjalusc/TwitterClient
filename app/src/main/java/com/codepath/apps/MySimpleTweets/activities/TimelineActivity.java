@@ -69,6 +69,7 @@ public class TimelineActivity extends ActionBarActivity {
         init();
         setupViewListeners();
         DbHelper.clearDb();
+        Log.d("DEBUG", "Cleared the DB");
         populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }

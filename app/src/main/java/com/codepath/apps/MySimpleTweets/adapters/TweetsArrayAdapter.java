@@ -42,6 +42,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivFavorites;
         TextView tvFavoritesCount;
         RelativeLayout rlRetweetHolder;
+        RelativeLayout rlFavoritesHolder;
         long id;
     }
 
@@ -69,6 +70,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.ivFavorites = (ImageView) convertView.findViewById(R.id.ivFavorites);
             viewHolder.tvFavoritesCount = (TextView) convertView.findViewById(R.id.tvFavoritesCount);
             viewHolder.rlRetweetHolder = (RelativeLayout) convertView.findViewById(R.id.rlRetweetHolder);
+            viewHolder.rlFavoritesHolder = (RelativeLayout) convertView.findViewById(R.id.rlFavoritesHolder);
             viewHolder.id = tweet.getUid();
             convertView.setTag(viewHolder);
         } else {
@@ -106,62 +108,101 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.rlRetweetHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
+                final TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
                 if (tweet.isRetweeted()) {
-                    undoRetweet(tweet);
-                    // Update the view UI to show grey retweet logo and grey retweet count text
-                    ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
-                    ivRetweet.setImageResource(R.drawable.ic_retweet_grey);
-                    TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
-                    tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.grey));
-                    tvRetweetCount.setTypeface(null, Typeface.BOLD);
-                    // Update the new retweet count
-                    tvRetweetCount.setText(tweet.getRetweetCount());
+                    client.postDeleteRetweet(tweet.getRetweetidStr(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                tweet.setRetweetIdStr(null);
+                                tweet.setRetweeted(false);
+                                tweet.setRetweetCount(response.getInt("retweet_count"));
+                                tweet.save();
+                                // Update the view UI to show grey retweet logo and grey retweet count text
+                                ivRetweet.setImageResource(R.drawable.ic_retweet_grey);
+                                tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.grey));
+                                tvRetweetCount.setTypeface(null, Typeface.NORMAL);
+                                // Update the new retweet count
+                                tvRetweetCount.setText(tweet.getRetweetCount());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
                 } else {
-                    postRetweet(tweet);
-                    // Update the view UI to show green retweet logo and green colored tweet count text
-                    ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
-                    ivRetweet.setImageResource(R.drawable.ic_retweet_green);
-                    TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
-                    tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.green));
-                    tvRetweetCount.setTypeface(null, Typeface.BOLD);
-                    // Update the new retweet count
-                    tvRetweetCount.setText(tweet.getRetweetCount());
+                    client.postRetweet(tweet.getUidStr(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                // Retweets are just like tweets. I am only keeping the id_str of the new retweet
+                                // so that when i delete it i should know which retweet i am deleting.
+                                tweet.setRetweetIdStr(response.getString("id_str"));
+                                tweet.setRetweeted(true);
+                                tweet.setRetweetCount(response.getInt("retweet_count"));
+                                tweet.save();
+                                // Update the view UI to show green retweet logo and green colored tweet count text
+                                ivRetweet.setImageResource(R.drawable.ic_retweet_green);
+                                tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.green));
+                                tvRetweetCount.setTypeface(null, Typeface.BOLD);
+                                // Update the new retweet count
+                                tvRetweetCount.setText(tweet.getRetweetCount());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
                 }
             }
         });
-    }
 
-    // Retweets a tweet
-    private void postRetweet(final Tweet tweet) {
-        client.postRetweet(tweet.getUidStr(), new JsonHttpResponseHandler() {
+        viewHolder.rlFavoritesHolder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    // Retweets are just like tweets. I am only keeping the id_str of the new retweet
-                    // so that when i delete it i should know which retweet i am deleting.
-                    tweet.setRetweetIdStr(response.getString("id_str"));
-                    tweet.setRetweeted(true);
-                    tweet.setRetweetCount(response.getInt("retweet_count"));
-                    tweet.save();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    // Deletes a retweeted tweet
-    private void undoRetweet(final Tweet tweet) {
-        client.postDeleteRetweet(tweet.getRetweetidStr(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    tweet.setRetweetIdStr(null);
-                    tweet.setRetweeted(false);
-                    tweet.setRetweetCount(response.getInt("retweet_count"));
-                    tweet.save();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onClick(final View view) {
+                final ImageView ivFavorites = (ImageView) view.findViewById(R.id.ivFavorites);
+                final TextView tvFavoritesCount = (TextView) view.findViewById(R.id.tvFavoritesCount);
+                if (tweet.isFavorited()) {
+                    client.postUndoFavorite(tweet.getUid(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                int favoritesCount = response.getInt("favorite_count");
+                                tweet.setFavoriteCount(favoritesCount);
+                                tweet.setFavorited(false);
+                                tweet.save();
+                                // Update the view UI to show grey favorite logo and grey colored tweet count text
+                                ivFavorites.setImageResource(R.drawable.ic_fav_grey);
+                                tvFavoritesCount.setTextColor(getContext().getResources().getColor(R.color.grey));
+                                tvFavoritesCount.setTypeface(null, Typeface.NORMAL);
+                                // Update the new retweet count
+                                tvFavoritesCount.setText(tweet.getFavoritesCount());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+                    client.postMarkFavorite(tweet.getUid(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                int favoritesCount = response.getInt("favorite_count");
+                                tweet.setFavoriteCount(favoritesCount);
+                                tweet.setFavorited(true);
+                                tweet.save();
+                                // Update the view
+                                ivFavorites.setImageResource(R.drawable.ic_fav_yellow);
+                                tvFavoritesCount.setTextColor(getContext().getResources().getColor(R.color.yellow));
+                                tvFavoritesCount.setTypeface(null, Typeface.BOLD);
+                                // Update the new retweet count
+                                tvFavoritesCount.setText(tweet.getFavoritesCount());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -197,4 +238,5 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvFavoritesCount.setTypeface(null, Typeface.NORMAL);
         }
     }
+
 }

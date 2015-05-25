@@ -54,6 +54,7 @@ public class Tweet extends Model implements Serializable {
 
     public void setFavoriteCount(int favoriteCount) {
         this.favoriteCount = favoriteCount;
+        Log.d("DEBUG", "Set favorite Count to: " + favoriteCount);
     }
 
     public void setRetweetCount(int retweetCount) {

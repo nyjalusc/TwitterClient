@@ -95,18 +95,26 @@
                 android:layout_toRightOf="@+id/ivRetweet"/>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlFavoritesHolder"
+            android:clickable="true"
+            android:layout_alignParentRight="true">
+
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/ivFavorites"
-            android:layout_toLeftOf="@+id/tvFavoritesCount"/>
+            android:id="@+id/ivFavorites"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvFavoritesCount"
-            android:textColor="@color/grey"
-            android:layout_alignParentRight="true"/>
+            android:layout_toRightOf="@+id/ivFavorites"
+            android:textColor="@color/grey"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
