@@ -56,7 +56,10 @@ public class ComposeActivity extends ActionBarActivity {
 
     private void prepareMessage(Tweet tweet) {
         String replyTo = tweet.getUser().getScreenName();
-        etMessage.setText(replyTo);
+        // Included space for better formatting
+        etMessage.setText(replyTo + " ");
+        // Moves the cursor at the end of the String
+        etMessage.setSelection(etMessage.getText().length());
         remainingChars = TWEET_CHAR_LIMIT - replyTo.length();
         tvCharCount.setText(remainingChars + "");
     }
