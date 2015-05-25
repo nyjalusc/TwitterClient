@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.apps.MySimpleTweets.R;
+import com.codepath.apps.MySimpleTweets.activities.TimelineActivity;
 import com.codepath.apps.MySimpleTweets.activities.TwitterApplication;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
@@ -41,6 +42,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvRetweetCount;
         ImageView ivFavorites;
         TextView tvFavoritesCount;
+        ImageView ivReply;
         RelativeLayout rlRetweetHolder;
         RelativeLayout rlFavoritesHolder;
         long id;
@@ -69,6 +71,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
             viewHolder.ivFavorites = (ImageView) convertView.findViewById(R.id.ivFavorites);
             viewHolder.tvFavoritesCount = (TextView) convertView.findViewById(R.id.tvFavoritesCount);
+            viewHolder.ivReply = (ImageView) convertView.findViewById(R.id.ivReply);
             viewHolder.rlRetweetHolder = (RelativeLayout) convertView.findViewById(R.id.rlRetweetHolder);
             viewHolder.rlFavoritesHolder = (RelativeLayout) convertView.findViewById(R.id.rlFavoritesHolder);
             viewHolder.id = tweet.getUid();
@@ -105,6 +108,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     }
 
     private void setupViewListerners(final ViewHolder viewHolder, final Tweet tweet) {
+        // View listener for Retweets
         viewHolder.rlRetweetHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +162,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
+        // View listener for Favorites
         viewHolder.rlFavoritesHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -204,6 +209,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                         }
                     });
                 }
+            }
+        });
+
+        // View listener for reply button
+        viewHolder.ivReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Accessing activity method from an adapter
+                ((TimelineActivity) getContext()).launchComposeActivityForReply(tweet);
             }
         });
     }

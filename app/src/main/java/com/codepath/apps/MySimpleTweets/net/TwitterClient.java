@@ -85,6 +85,14 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().post(apiUrl, params, handler);
 	}
 
+	public void postReply(String status, String id, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", status);
+		params.put("in_reply_to_status_id", id);
+		getClient().post(apiUrl, params, handler);
+	}
+
 	// id_str of the tweet that you want to retweet
 	// It is important to use the string version and not the long version
 	// The data sent is a part of the url and not a param. It didn't workout when i used a long, str

@@ -39,14 +39,26 @@ public class ComposeActivity extends ActionBarActivity {
     private static final int TWEET_CHAR_LIMIT = 140;
     private RelativeDate relativeDate;
     private String tweetText;
+    private String inReplyTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         init();
-//        getUserDetail();
+        Tweet tweet = (Tweet) getIntent().getSerializableExtra("tweet");
+        if (tweet != null) {
+            inReplyTo = tweet.getUidStr();
+            prepareMessage(tweet);
+        }
         setupListener();
+    }
+
+    private void prepareMessage(Tweet tweet) {
+        String replyTo = tweet.getUser().getScreenName();
+        etMessage.setText(replyTo);
+        remainingChars = TWEET_CHAR_LIMIT - replyTo.length();
+        tvCharCount.setText(remainingChars + "");
     }
 
     // Listener to update the textview that shows the numbers of characters left in a tweet message
@@ -154,28 +166,51 @@ public class ComposeActivity extends ActionBarActivity {
 
     private void postTweet() {
         tweetText = etMessage.getText().toString();
-        client.postTweet(tweetText, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                // Create a tweet object and pass it to the parent activity
-                // to update the listview; This is a hack to quickly update the listview
-                // without waiting for the current tweet to show up in Twitter's API
-                Tweet tweet = constructTweet(tweetText);
-                Intent data = new Intent();
-                data.putExtra("tweet", tweet);
-                data.putExtra("code", 200);
-                // Activity finished ok, return the data
-                setResult(RESULT_OK, data); // set result code and bundle data for response
-                finish(); // closes the activity, pass data to parent
-                // Apply Bottom-up transition
-                overridePendingTransition(R.animator.slide_out_up, R.animator.slide_in_up);
-            }
+        if (inReplyTo == null) {
+            client.postTweet(tweetText, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    // Create a tweet object and pass it to the parent activity
+                    // to update the listview; This is a hack to quickly update the listview
+                    // without waiting for the current tweet to show up in Twitter's API
+                    Tweet tweet = constructTweet(tweetText);
+                    finishActivity(tweet);
+                }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d("DEBUG FAILED", statusCode + "");
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.d("DEBUG FAILED", statusCode + "");
+                }
+            });
+        } else {
+            client.postReply(tweetText, inReplyTo, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    // Create a tweet object and pass it to the parent activity
+                    // to update the listview; This is a hack to quickly update the listview
+                    // without waiting for the current tweet to show up in Twitter's API
+                    Tweet tweet = constructTweet(tweetText);
+                    finishActivity(tweet);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.d("DEBUG FAILED", statusCode + "");
+                }
+            });
+        }
+    }
+
+    // Closes the activity and passes the data back to the parent activity
+    private void finishActivity(Tweet tweet) {
+        Intent data = new Intent();
+        data.putExtra("tweet", tweet);
+        data.putExtra("code", 200);
+        // Activity finished ok, return the data
+        setResult(RESULT_OK, data); // set result code and bundle data for response
+        finish(); // closes the activity, pass data to parent
+        // Apply Bottom-up transition
+        overridePendingTransition(R.animator.slide_out_up, R.animator.slide_in_up);
     }
 
     private Tweet constructTweet(String status) {

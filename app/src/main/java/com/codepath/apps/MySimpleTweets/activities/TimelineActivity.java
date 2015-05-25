@@ -293,6 +293,14 @@ public class TimelineActivity extends ActionBarActivity {
         overridePendingTransition(R.animator.slide_in_up, R.animator.slide_out_up);
     }
 
+    public void launchComposeActivityForReply(Tweet tweet) {
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        i.putExtra("tweet", tweet);
+        startActivityForResult(i, REQUEST_CODE);
+        // Apply Bottom-up transition
+        overridePendingTransition(R.animator.slide_in_up, R.animator.slide_out_up);
+    }
+
     // Result from the compose activity needs to be added to the adapter to update the view
     // This is a hack to quickly update the view without waiting for the tweet to appear in the
     // Twitter's api
