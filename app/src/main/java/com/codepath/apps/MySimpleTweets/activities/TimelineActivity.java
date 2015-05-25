@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,11 +40,6 @@ public class TimelineActivity extends ActionBarActivity {
     // List of Tweets received in the last GET request
     private ArrayList<Tweet> parsedResponse;
     private SwipeRefreshLayout swipeContainer;
-
-    public void retweet(View view) {
-        Tweet tweet = (Tweet) view.getTag();
-    }
-
 
     // Add new params to this class
     public enum TimelineParams {

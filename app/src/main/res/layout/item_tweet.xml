@@ -75,19 +75,25 @@
             android:src="@drawable/ic_reply"/>
 
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/ivRetweet"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvRetweetCount"
-            android:textColor="@color/grey"
-            android:layout_toRightOf="@+id/ivRetweet"
-            android:layout_centerHorizontal="true"/>
+            android:id="@+id/rlRetweetHolder"
+            android:clickable="true"
+            android:layout_centerHorizontal="true">
+            <!--android:onClick="retweetHandler"-->
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/ivRetweet"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRetweetCount"
+                android:textColor="@color/grey"
+                android:layout_toRightOf="@+id/ivRetweet"/>
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="20dp"

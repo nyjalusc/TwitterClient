@@ -8,16 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.apps.MySimpleTweets.R;
+import com.codepath.apps.MySimpleTweets.activities.TwitterApplication;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
+import com.codepath.apps.MySimpleTweets.net.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 // Taking the tweet object and turning them into views that will be displayed in the list
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
+
+    private TwitterClient client;
 
     // ViewHolder Pattern
     private static class ViewHolder {
@@ -31,10 +41,13 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvRetweetCount;
         ImageView ivFavorites;
         TextView tvFavoritesCount;
+        RelativeLayout rlRetweetHolder;
+        long id;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
+        client = TwitterApplication.getRestClient();
     }
 
     @Override
@@ -55,6 +68,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
             viewHolder.ivFavorites = (ImageView) convertView.findViewById(R.id.ivFavorites);
             viewHolder.tvFavoritesCount = (TextView) convertView.findViewById(R.id.tvFavoritesCount);
+            viewHolder.rlRetweetHolder = (RelativeLayout) convertView.findViewById(R.id.rlRetweetHolder);
+            viewHolder.id = tweet.getUid();
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -82,9 +97,47 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                     .error(R.drawable.abc_ab_share_pack_holo_dark)
                     .into(viewHolder.ivImage);
         }
-
         setupTweetFooter(viewHolder, tweet);
+        setupViewListerners(viewHolder, tweet);
         return convertView;
+    }
+
+    private void setupViewListerners(final ViewHolder viewHolder, final Tweet tweet) {
+        viewHolder.rlRetweetHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tweet.isRetweeted()) {
+                    undoRetweet(tweet);
+                } else {
+                    postRetweet(tweet);
+                    // Update the view UI to show green retweet logo and green colored tweet count text
+                    ImageView ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
+                    ivRetweet.setImageResource(R.drawable.ic_retweet_green);
+
+                    TextView tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
+                    tvRetweetCount.setTextColor(getContext().getResources().getColor(R.color.green));
+                    tvRetweetCount.setTypeface(null, Typeface.BOLD);
+                }
+            }
+        });
+    }
+
+    private void postRetweet(final Tweet tweet) {
+        client.postRetweet(tweet.getUidStr(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    tweet.setRetweetId(response.getString("id_str"));
+                    tweet.setRetweeted(true);
+                    tweet.save();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void undoRetweet(Tweet tweet) {
     }
 
     private void setupTweetFooter(ViewHolder viewHolder, Tweet tweet) {
@@ -115,8 +168,5 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvFavoritesCount.setTextColor(getContext().getResources().getColor(R.color.grey));
             viewHolder.tvFavoritesCount.setTypeface(null, Typeface.NORMAL);
         }
-    }
-
-    private void setupViewListeners(ViewHolder viewHolder) {
     }
 }
