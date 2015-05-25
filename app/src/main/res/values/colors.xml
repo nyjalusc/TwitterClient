@@ -6,4 +6,5 @@
     <color name="grey">#BDBDBD</color>
     <color name="green">#8BC34A</color>
     <color name="yellow">#FFC107</color>
+    <color name="linkColor">#0084C2</color>
 </resources>

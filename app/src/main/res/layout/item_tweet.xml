@@ -47,6 +47,7 @@
             android:id="@+id/tvBody"
             android:autoLink="all"
             android:linksClickable="true"
+            android:textColorLink="@color/linkColor"
             android:layout_below="@+id/tvName"/>
 
         <ImageView
