@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.codepath.apps.MySimpleTweets.activities.ComposeActivity">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -35,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvName"
+        android:textSize="16sp"
         android:text="Woo Hoo"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/toolbar"
@@ -45,6 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvScreenName"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
         android:text="Woo Hoo"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/ivProfileImage"

@@ -22,7 +22,6 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-//		CalligraphyConfig.initDefault("fonts/Roboto-Thin.ttf");
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 				.setDefaultFontPath("fonts/Roboto-Light.ttf")
 				.setFontAttrId(R.attr.fontPath)

@@ -164,9 +164,6 @@ public class Tweet extends Model implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (tweet.hasOriginalTweet()) {
-            Log.d("Debug", "This is retweeted: " + tweet.body);
-        }
         return tweet;
     }
 
