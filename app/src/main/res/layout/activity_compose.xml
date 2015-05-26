@@ -10,7 +10,17 @@
         android:minHeight="?android:attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="15dp"
-        android:background="@color/twitter_blue" />
+        android:background="@color/twitter_blue">
+
+        <TextView
+            android:id="@+id/tvCharCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:layout_gravity="end"/>
+
+        </android.support.v7.widget.Toolbar>
 
     <ImageView
         android:layout_width="50dp"

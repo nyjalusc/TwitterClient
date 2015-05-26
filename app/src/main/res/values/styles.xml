@@ -27,9 +27,9 @@
         <!--<item name="android:colorAccent">#FF4081</item>-->
         <!--&lt;!&ndash; You can also set colorControlNormal, colorControlActivated-->
              <!--colorControlHighlight and colorSwitchThumbNormal. &ndash;&gt;-->
-        <item name="android:textColorPrimary">@color/white</item>
+        <!--<item name="textColorPrimary">@color/white</item>-->
 
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
 

@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,10 +105,8 @@ public class ComposeActivity extends ActionBarActivity {
         actionbar.setIcon(R.drawable.ic_twitter_home);
 
         // Add a textview to the toolbar
-        View actionbar_count = getLayoutInflater().inflate(R.layout.actionbar_view, null);
-        tvCharCount = (TextView) actionbar_count.findViewById(R.id.tvCharCount);
+        tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         tvCharCount.setText(remainingChars + "");
-        toolbar.addView(actionbar_count);
     }
 
     @Override
@@ -134,7 +131,8 @@ public class ComposeActivity extends ActionBarActivity {
         // Get the references and set the values for views
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         ivProfileImage.setImageResource(android.R.color.transparent);
-        Picasso.with(this).load(currentUser.getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(ivProfileImage);
+//        Picasso.with(this).load(currentUser.getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(ivProfileImage);
+        Picasso.with(this).load(currentUser.getProfileImageUrl()).into(ivProfileImage);
 
         // Set the Name
         TextView tvName = (TextView) findViewById(R.id.tvName);

@@ -103,10 +103,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     private void setupViews(ViewHolder viewHolder, Tweet tweet) {
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+//        Picasso.with(getContext())
+//                .load(tweet.getUser().getProfileImageUrl())
+//                .error(R.drawable.abc_ab_share_pack_holo_dark)
+//                .into(viewHolder.ivProfileImage);
+
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
-                .error(R.drawable.abc_ab_share_pack_holo_dark)
                 .into(viewHolder.ivProfileImage);
+
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvName.setText(tweet.getUser().getName());
@@ -118,9 +123,13 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         } else {
             viewHolder.ivImage.setVisibility(View.VISIBLE);
             viewHolder.ivImage.setImageResource(0);
+//            Picasso.with(getContext())
+//                    .load(tweet.getImage().getSmallImageUrl())
+//                    .error(R.drawable.abc_ab_share_pack_holo_dark)
+//                    .into(viewHolder.ivImage);
+
             Picasso.with(getContext())
                     .load(tweet.getImage().getSmallImageUrl())
-                    .error(R.drawable.abc_ab_share_pack_holo_dark)
                     .into(viewHolder.ivImage);
         }
     }

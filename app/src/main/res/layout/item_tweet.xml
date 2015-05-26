@@ -59,14 +59,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvName"/>
+            android:id="@+id/tvName"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:textSize="14sp"
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvScreenName"
+            android:layout_alignBottom="@+id/tvName"
             android:layout_alignParentTop="true"
+            android:paddingTop="2dp"
             android:layout_toRightOf="@+id/tvName"
+            android:textSize="12sp"
             android:layout_above="@+id/tvBody"/>
 
         <TextView
