@@ -60,6 +60,7 @@
         android:id="@+id/etMessage"
         android:hint="@string/compose_hint"
         android:gravity="top"
+        android:textCursorDrawable="@drawable/color_cursor"
         android:maxLength="@integer/tweet_char_limit"
         android:textColor="@color/black"
         android:layout_below="@+id/ivProfileImage"
