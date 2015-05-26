@@ -40,12 +40,24 @@ public class Tweet extends Model implements Serializable {
     @Column(name="favorite_count")
     private int favoriteCount;
     @Column(name="retweeted")
+    // True if retweeted by the current user
     private boolean retweeted;
     @Column(name="favorited")
     private boolean favorited;
     @Column(name="retweetIdStr")
     private String retweetidStr;
+    // if originalTweet != null, then the current tweet is a retweet of the original tweet
+    // If null then the current tweet is not a retweet
+    @Column(name="originalTweet")
+    private Tweet originalTweet;
 
+    public Tweet getOriginalTweet() {
+        return originalTweet;
+    }
+
+    public boolean hasOriginalTweet() {
+        return (originalTweet != null ? true : false);
+    }
     private RelativeDate relativeDate;
 
     public String getUidStr() {
@@ -145,8 +157,15 @@ public class Tweet extends Model implements Serializable {
             tweet.favoriteCount = jsonObject.getInt("favorite_count");
             tweet.retweeted = jsonObject.getBoolean("retweeted");
             tweet.favorited = jsonObject.getBoolean("favorited");
+            if (jsonObject.getJSONObject("retweeted_status") != null) {
+                // Get the tweet object of the original tweet
+                tweet.originalTweet = fromJSON(jsonObject.getJSONObject("retweeted_status"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        if (tweet.hasOriginalTweet()) {
+            Log.d("Debug", "This is retweeted: " + tweet.body);
         }
         return tweet;
     }

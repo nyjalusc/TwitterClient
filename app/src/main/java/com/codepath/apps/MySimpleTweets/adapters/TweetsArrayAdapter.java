@@ -43,8 +43,10 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivFavorites;
         TextView tvFavoritesCount;
         ImageView ivReply;
+        TextView tvRetweetedUser;
         RelativeLayout rlRetweetHolder;
         RelativeLayout rlFavoritesHolder;
+        RelativeLayout rlRetweetInfoRow;
         long id;
     }
 
@@ -63,6 +65,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvRelativeTime = (TextView) convertView.findViewById(R.id.tvRelativeTime);
+            viewHolder.tvRetweetedUser = (TextView) convertView.findViewById(R.id.tvRetweetedUser);
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
@@ -74,13 +77,31 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.ivReply = (ImageView) convertView.findViewById(R.id.ivReply);
             viewHolder.rlRetweetHolder = (RelativeLayout) convertView.findViewById(R.id.rlRetweetHolder);
             viewHolder.rlFavoritesHolder = (RelativeLayout) convertView.findViewById(R.id.rlFavoritesHolder);
+            viewHolder.rlRetweetInfoRow = (RelativeLayout) convertView.findViewById(R.id.rlRetweetInfoRow);
             viewHolder.id = tweet.getUid();
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        // 3. Set values on subviews
-        // Remove old image and set a new one
+
+        // Check if there is an original tweet associated with the tweet
+        // If true then this tweet is a retweet; we need to set the views by using values of
+        // original tweet otherwise use the current tweet.
+        if (tweet.hasOriginalTweet()) {
+            viewHolder.rlRetweetInfoRow.setVisibility(View.VISIBLE);
+            viewHolder.tvRetweetedUser.setText(tweet.getUser().getName() + " retweeted");
+            setupViews(viewHolder, tweet.getOriginalTweet());
+        } else {
+            viewHolder.rlRetweetInfoRow.setVisibility(View.GONE);
+            setupViews(viewHolder, tweet);
+        }
+
+        setupTweetFooter(viewHolder, tweet);
+        setupViewListerners(viewHolder, tweet);
+        return convertView;
+    }
+
+    private void setupViews(ViewHolder viewHolder, Tweet tweet) {
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
@@ -102,9 +123,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                     .error(R.drawable.abc_ab_share_pack_holo_dark)
                     .into(viewHolder.ivImage);
         }
-        setupTweetFooter(viewHolder, tweet);
-        setupViewListerners(viewHolder, tweet);
-        return convertView;
     }
 
     private void setupViewListerners(final ViewHolder viewHolder, final Tweet tweet) {
