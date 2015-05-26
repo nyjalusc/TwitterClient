@@ -60,8 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvName"
-            android:textStyle="bold"
-            android:textColor="#212121"
+            fontPath="fonts/Roboto-Bold.ttf"
             android:textSize="14sp"
             android:layout_marginRight="5dp"/>
 

@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ComposeActivity extends ActionBarActivity {
 
     private TwitterClient client;
@@ -51,6 +53,11 @@ public class ComposeActivity extends ActionBarActivity {
             prepareMessage(tweet);
         }
         setupListener();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void prepareMessage(Tweet tweet) {

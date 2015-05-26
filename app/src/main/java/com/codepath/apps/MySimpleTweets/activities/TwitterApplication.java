@@ -2,7 +2,10 @@ package com.codepath.apps.MySimpleTweets.activities;
 
 import android.content.Context;
 
+import com.codepath.apps.MySimpleTweets.R;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /*
  * This is the Android application itself and is used to configure various settings
@@ -19,6 +22,11 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+//		CalligraphyConfig.initDefault("fonts/Roboto-Thin.ttf");
+		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+				.setDefaultFontPath("fonts/Roboto-Light.ttf")
+				.setFontAttrId(R.attr.fontPath)
+				.build());
 		TwitterApplication.context = this;
 	}
 

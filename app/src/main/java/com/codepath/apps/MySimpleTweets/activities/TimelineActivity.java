@@ -1,5 +1,6 @@
 package com.codepath.apps.MySimpleTweets.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,6 +27,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TimelineActivity extends ActionBarActivity {
 
@@ -72,6 +75,11 @@ public class TimelineActivity extends ActionBarActivity {
 //        Log.d("DEBUG", "Cleared the DB");
         populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     // Initialize properties
