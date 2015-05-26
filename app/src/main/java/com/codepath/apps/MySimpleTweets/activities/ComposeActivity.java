@@ -103,6 +103,7 @@ public class ComposeActivity extends ActionBarActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setIcon(R.drawable.ic_twitter_home);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_up_menu);
 
         // Add a textview to the toolbar
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
