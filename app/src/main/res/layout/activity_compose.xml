@@ -36,9 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvName"
-        android:textSize="16sp"
-        android:text="Woo Hoo"
-        android:layout_marginTop="5dp"
+        android:textSize="18sp"
+        android:layout_alignTop="@+id/ivProfileImage"
         android:layout_below="@+id/toolbar"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage" />
@@ -47,10 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvScreenName"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@color/grey"
-        android:text="Woo Hoo"
-        android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/ivProfileImage"
         android:layout_toRightOf="@+id/ivProfileImage"/>
 
