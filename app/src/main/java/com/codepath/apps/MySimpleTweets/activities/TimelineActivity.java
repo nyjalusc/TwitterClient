@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -71,8 +70,6 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         init();
         setupViewListeners();
-//        DbHelper.clearDb();
-//        Log.d("DEBUG", "Cleared the DB");
         populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();
     }
@@ -234,9 +231,7 @@ public class TimelineActivity extends ActionBarActivity {
                 // the COUNT in request was 100
                 if (response.length() >= (DEFAULT_COUNT - 5) && clearDb) {
                     DbHelper.clearDb();
-                    Log.d("DEBUG", "Cleared the db");
                 }
-                Log.d("DEBUG", "Number of tweets fetched: " + response.length());
                 parsedResponse = Tweet.fromJSONArray(response);
                 // This if block is intentionally kept separate from the above if block.
                 // It is to reduce to delay on UI thread, because UI refreshes as soon as

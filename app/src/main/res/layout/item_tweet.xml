@@ -119,8 +119,8 @@
         android:layout_centerVertical="true">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:id="@+id/ivReply"
             android:clickable="true"
             android:layout_alignParentLeft="true"
@@ -131,19 +131,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rlRetweetHolder"
+            android:paddingTop="1dp"
             android:clickable="true"
             android:layout_centerHorizontal="true">
-            <!--android:onClick="retweetHandler"-->
+
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:id="@+id/ivRetweet"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvRetweetCount"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/grey"
                 android:layout_toRightOf="@+id/ivRetweet"/>
         </RelativeLayout>
@@ -156,15 +157,16 @@
             android:layout_alignParentRight="true">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:id="@+id/ivFavorites"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvFavoritesCount"
-                android:textSize="16sp"
+                android:paddingTop="0.5dp"
+                android:textSize="15sp"
                 android:layout_toRightOf="@+id/ivFavorites"
                 android:textColor="@color/grey"/>
 
