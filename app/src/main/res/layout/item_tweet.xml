@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvName"
             fontPath="fonts/Roboto-Bold.ttf"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_marginRight="5dp"/>
 
         <TextView
@@ -72,14 +72,17 @@
             android:layout_alignParentTop="true"
             android:paddingTop="2dp"
             android:layout_toRightOf="@+id/tvName"
-            android:textSize="14sp"
+            android:layout_toLeftOf="@+id/tvRelativeTime"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="13sp"
             android:layout_above="@+id/tvBody"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvRelativeTime"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/grey"
             android:layout_alignBottom="@+id/tvName"
             android:layout_alignParentRight="true"

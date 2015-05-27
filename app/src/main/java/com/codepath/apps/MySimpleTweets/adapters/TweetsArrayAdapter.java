@@ -102,14 +102,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     }
 
     private void setupViews(ViewHolder viewHolder, Tweet tweet) {
-        viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
-//        Picasso.with(getContext())
-//                .load(tweet.getUser().getProfileImageUrl())
-//                .error(R.drawable.abc_ab_share_pack_holo_dark)
-//                .into(viewHolder.ivProfileImage);
-
+        viewHolder.ivProfileImage.setImageResource(0);
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
+                .error(R.drawable.ic_error)
+                .fit()
                 .into(viewHolder.ivProfileImage);
 
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
@@ -123,13 +120,10 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         } else {
             viewHolder.ivImage.setVisibility(View.VISIBLE);
             viewHolder.ivImage.setImageResource(0);
-//            Picasso.with(getContext())
-//                    .load(tweet.getImage().getSmallImageUrl())
-//                    .error(R.drawable.abc_ab_share_pack_holo_dark)
-//                    .into(viewHolder.ivImage);
-
             Picasso.with(getContext())
                     .load(tweet.getImage().getSmallImageUrl())
+                    .error(R.drawable.ic_error)
+                    .fit()
                     .into(viewHolder.ivImage);
         }
     }
@@ -148,7 +142,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                             try {
                                 tweet.setRetweetIdStr(null);
                                 tweet.setRetweeted(false);
-                                tweet.setRetweetCount(response.getInt("retweet_count"));
+                                tweet.setRetweetCount(response.getInt("retweet_count") - 1);
                                 tweet.save();
                                 // Update the view UI to show grey retweet logo and grey retweet count text
                                 ivRetweet.setImageResource(R.drawable.ic_retweet_grey);

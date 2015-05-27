@@ -139,8 +139,10 @@ public class ComposeActivity extends ActionBarActivity {
         // Get the references and set the values for views
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         ivProfileImage.setImageResource(android.R.color.transparent);
-//        Picasso.with(this).load(currentUser.getProfileImageUrl()).error(R.drawable.abc_ab_share_pack_holo_dark).into(ivProfileImage);
-        Picasso.with(this).load(currentUser.getProfileImageUrl()).into(ivProfileImage);
+        Picasso.with(this).load(currentUser.getProfileImageUrl())
+                .error(R.drawable.ic_error)
+                .fit()
+                .into(ivProfileImage);
 
         // Set the Name
         TextView tvName = (TextView) findViewById(R.id.tvName);

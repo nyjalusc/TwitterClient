@@ -38,7 +38,7 @@ public class TimelineActivity extends ActionBarActivity {
     private ListView lvTweets;
     private ConnectivityChecker connectivityChecker;
     private HashMap<String, String> endpointKeyMap;
-    private int DEFAULT_COUNT = 100;
+    private int DEFAULT_COUNT = 50;
     private final int REQUEST_CODE = 20;
     // List of Tweets received in the last GET request
     private ArrayList<Tweet> parsedResponse;
@@ -230,9 +230,9 @@ public class TimelineActivity extends ActionBarActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // This is true when the application loads for the first time.
                 // Done to fill the view and DB with latest tweet objects
-                // (DEFAULT_COUNT - 1) is used to handle the case where endpoint returns 99 objects even though
+                // (DEFAULT_COUNT - 5) is used to handle the case where endpoint returns 99 objects even though
                 // the COUNT in request was 100
-                if (response.length() >= (DEFAULT_COUNT - 1) && clearDb) {
+                if (response.length() >= (DEFAULT_COUNT - 5) && clearDb) {
                     DbHelper.clearDb();
                     Log.d("DEBUG", "Cleared the db");
                 }
@@ -242,7 +242,7 @@ public class TimelineActivity extends ActionBarActivity {
                 // It is to reduce to delay on UI thread, because UI refreshes as soon as
                 // contents in the adapter change. So, clear and refilling the adapter should
                 // happen back to back.
-                if (parsedResponse.size() >= (DEFAULT_COUNT - 1) && clearDb) {
+                if (parsedResponse.size() >= (DEFAULT_COUNT - 5) && clearDb) {
                     resetAdapterWithNewTweets(parsedResponse);
                 } else {
                     appendTweets(parsedResponse, appendEnd);
