@@ -35,6 +35,10 @@ The following **additional** features are implemented:
 * [x] Used Calligraphy library for custom fonts
 * [x] Played with activity transitions. Applied "bottom-up" transition when going from Main Activity => Compose Activity
 
+## Gif Walkthrough 
+
+![alt tag](https://github.com/nyjalusc/TwitterClient/blob/master/walkthrough.gif)
+
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
