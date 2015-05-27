@@ -69,6 +69,7 @@ public class TimelineActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
         init();
+//        DbHelper.clearDb();
         setupViewListeners();
         populateTimelineAndAppendAtEnd(true);
         setupSwipeRefresh();

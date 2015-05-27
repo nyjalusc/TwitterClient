@@ -28,6 +28,9 @@ public class RelativeDate implements Serializable {
     // Formats the string as per the requirement of the UI
     // eg. 33 minutes => 33m
     private String timeFormatter(String relativeDate) {
+        if (relativeDate.equals("Yesterday")) {
+            return "1d";
+        }
         String[] words = relativeDate.split(" ");
         StringBuilder result = new StringBuilder();
         result.append(words[0]);
