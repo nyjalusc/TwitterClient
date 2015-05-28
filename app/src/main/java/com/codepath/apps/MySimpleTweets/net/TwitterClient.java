@@ -3,7 +3,6 @@ package com.codepath.apps.MySimpleTweets.net;
 import android.content.Context;
 import android.util.Log;
 
-import com.codepath.apps.MySimpleTweets.activities.TimelineActivity.TimelineParams;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -56,7 +55,7 @@ public class TwitterClient extends OAuthBaseClient {
 		Log.d("DEBUG ", "Preparing params..");
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
-			if (key.equals(TimelineParams.COUNT.toString())) {
+			if (key.equals("count")) {
 				Log.d("DEBUG COUNT", endpointKeyMap.get(key).toString());
 				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
 			} else {
