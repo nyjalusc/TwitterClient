@@ -36,7 +36,8 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     // Custom fonts
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-
+    // tabs
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 
 repositories {

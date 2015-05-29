@@ -3,12 +3,19 @@ package com.codepath.apps.MySimpleTweets.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.MySimpleTweets.R;
+import com.codepath.apps.MySimpleTweets.fragments.HomeTimelineFragment;
+import com.codepath.apps.MySimpleTweets.fragments.MentionsTimelineFragment;
 import com.codepath.apps.MySimpleTweets.fragments.TweetsListFragment;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
 
@@ -25,10 +32,18 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
         // Initializes the toolbar
         initToolbar();
-        // Get access to the fragment from layout
-        if (savedInstanceState == null) {
-            tweetsListFragment = (TweetsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
-        }
+        setupViewPager();
+    }
+
+    private void setupViewPager() {
+        // Get the viewpager
+        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+        // Set the viewpager
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        // Find the pager sliding tabs
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        // Attach the tabstrip to the viewpager
+        tabStrip.setViewPager(vpPager);
     }
 
     @Override
@@ -92,6 +107,39 @@ public class TimelineActivity extends ActionBarActivity {
             Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
             tweetsListFragment.getTweets().add(0, tweet);
             tweetsListFragment.getTweetsAdapter().notifyDataSetChanged();
+        }
+    }
+
+    // Returns the order of the fragment in the viewpager
+    public class TweetsPagerAdapter extends FragmentPagerAdapter {
+        private String tabTitles[] = {"Home", "Mentions"};
+
+        // Adapter gets the fragment manager to add or remove the fragments from activity
+        public TweetsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        // The order and creation of fragments within the pager
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new HomeTimelineFragment();
+            } else if(position == 1) {
+                return new MentionsTimelineFragment();
+            }
+            return null;
+        }
+
+        // Returns the tab titles
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        // Returns the number of fragments to swipe
+        @Override
+        public int getCount() {
+            return tabTitles.length;
         }
     }
 }

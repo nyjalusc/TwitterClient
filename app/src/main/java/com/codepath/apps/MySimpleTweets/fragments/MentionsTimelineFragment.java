@@ -195,8 +195,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         });
     }
 
-
-
     // Sets the value of MAX_ID to one less than the oldest tweet processed
     private void setValueOfEndpointParams() {
         if (parsedResponse == null) {
