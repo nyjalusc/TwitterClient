@@ -129,11 +129,9 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		RequestParams params = new RequestParams();
 //		params.put("count", 25);
-		Log.d("DEBUG ", "Preparing params..");
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
 			if (key.equals("count")) {
-				Log.d("DEBUG COUNT", endpointKeyMap.get(key).toString());
 				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
 			} else {
 				String value = endpointKeyMap.get(key);
@@ -143,8 +141,35 @@ public class TwitterClient extends OAuthBaseClient {
 				}
 			}
 		}
-//		Log.d("DEBUG", "executing");
 		// Execute the request
+		getClient().get(apiUrl, params, handler);
+	}
+
+	public void getUserTimeline(HashMap<String, String> endpointKeyMap, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/user_timeline.json");
+		RequestParams params = new RequestParams();
+//		params.put("count", 25);
+		Set<String> keys = endpointKeyMap.keySet();
+		for (String key : keys) {
+			if (key.equals("count")) {
+				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
+			} else {
+				String value = endpointKeyMap.get(key);
+				if (value != null) {
+					Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
+					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
+				}
+			}
+		}
+		// Execute the request
+		getClient().get(apiUrl, params, handler);
+	}
+
+	public void getUserInfo(String screenName, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		params.put("screen_name", screenName);
 		getClient().get(apiUrl, params, handler);
 	}
 }

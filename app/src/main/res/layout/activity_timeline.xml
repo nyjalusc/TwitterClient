@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/twitter_blue">
         <TextView
-            android:id="@+id/tvCharCount"
+            android:id="@+id/tvHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_activity_timeline"
@@ -21,6 +21,12 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:layout_gravity="start"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivProfile"
+            />
     </android.support.v7.widget.Toolbar>
 
     <com.astuetz.PagerSlidingTabStrip

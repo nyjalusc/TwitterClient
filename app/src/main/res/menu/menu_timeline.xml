@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.codepath.apps.MySimpleTweets.activities.TimelineActivity">
 
+    <item android:id="@+id/miProfile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile"
+        android:orderInCategory="5"
+        android:onClick="onProfileView"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_compose"
         android:icon="@drawable/ic_tweet"
         android:title="Tweet"

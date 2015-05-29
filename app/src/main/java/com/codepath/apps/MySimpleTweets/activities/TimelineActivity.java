@@ -79,7 +79,6 @@ public class TimelineActivity extends ActionBarActivity {
         if (id == R.id.action_compose) {
             launchComposeActivity();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -108,6 +107,12 @@ public class TimelineActivity extends ActionBarActivity {
             tweetsListFragment.getTweets().add(0, tweet);
             tweetsListFragment.getTweetsAdapter().notifyDataSetChanged();
         }
+    }
+
+    public void onProfileView(MenuItem item) {
+        // Launch the profile view
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
     }
 
     // Returns the order of the fragment in the viewpager
