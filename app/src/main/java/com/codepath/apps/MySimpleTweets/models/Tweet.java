@@ -157,7 +157,7 @@ public class Tweet extends Model implements Serializable {
             tweet.favoriteCount = jsonObject.getInt("favorite_count");
             tweet.retweeted = jsonObject.getBoolean("retweeted");
             tweet.favorited = jsonObject.getBoolean("favorited");
-            if (jsonObject.getJSONObject("retweeted_status") != null) {
+            if (!jsonObject.isNull("retweeted_status")) {
                 // Get the tweet object of the original tweet
                 tweet.originalTweet = fromJSON(jsonObject.getJSONObject("retweeted_status"));
             }

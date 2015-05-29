@@ -24,7 +24,7 @@
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="com.codepath.apps.MySimpleTweets.fragments.HomeTimelineFragment"
+        android:name="com.codepath.apps.MySimpleTweets.fragments.MentionsTimelineFragment"
         android:id="@+id/fragment_timeline"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
