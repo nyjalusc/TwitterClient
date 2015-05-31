@@ -74,7 +74,17 @@ public abstract class TimelineFragment extends TweetsListFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         // Loads appropriate tweets in the view
         loadFromDb();
-        populateTimelineAndAppendAtEnd(true);
+        synchronized (this) {
+            if (aTweets.getCount() == 0) {
+                // If adapter is empty add all tweets in the order they were fetched
+                // This is true only when user is logging in for the first time
+                // in rest of the cases there will be tweets loaded from the database.
+                populateTimeline(false, true);
+            } else {
+                // If adapter is not empty add all the tweets at the beginning
+                populateTimeline(false, false);
+            }
+        }
         setupViewListeners();
         setupSwipeRefresh();
         return view;
@@ -137,11 +147,14 @@ public abstract class TimelineFragment extends TweetsListFragment {
                 PreferenceManager.getDefaultSharedPreferences(getActivity());
         String username = pref.getString("username", "n/a");
         Log.d("DEBUG", "Value read from pref: " + username);
-        if (username.equals("n/a")) {
-            getCurrentUserDetails();
+
+        synchronized (this) {
+            if (username.equals("n/a")) {
+                getCurrentUserDetails();
+                username = pref.getString("username", "n/a");
+                Log.d("DEBUG", "Value read from pref after request: " + username);
+            }
         }
-        String username2 = pref.getString("username", "n/a");
-        Log.d("DEBUG", "Value read from pref after request: " + username2);
         return username;
     }
 
@@ -197,8 +210,12 @@ public abstract class TimelineFragment extends TweetsListFragment {
         // DB will be cleared only if during a refresh we get DEFAULT_COUNT number of tweets; If that is true
         // then it means that the user is loading the app after a long time, it is better to clear all the old
         // tweets and start with a clean slate.
-        populateTimelineAndAppendInBeginning(true);
-        swipeContainer.setRefreshing(false);
+
+
+        synchronized (this) {
+            populateTimeline(false, false);
+            swipeContainer.setRefreshing(false);
+        }
     }
 
     private void populateTimelineAndAppendInBeginning(boolean clearDb) {
@@ -220,10 +237,10 @@ public abstract class TimelineFragment extends TweetsListFragment {
 
     // Sets the value of MAX_ID to one less than the oldest tweet processed
     private void setValueOfEndpointParams() {
-        int lastIndex = parsedResponse.size() - 1;
-        if (lastIndex <= 0) {
+        if (parsedResponse == null || (parsedResponse.size() -1 <= 0)) {
             return;
         }
+        int lastIndex = parsedResponse.size() - 1;
         long lastProcessedTweetId = parsedResponse.get(lastIndex).getUid();
         // max_id is set as the upper bound for the next request
         // In order to ge the id of the next unprocessed tweet we need to subtract 1 from id because

@@ -2,7 +2,6 @@ package com.codepath.apps.MySimpleTweets.fragments;
 
 import android.util.Log;
 
-import com.codepath.apps.MySimpleTweets.Helpers.DbHelper;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -23,23 +22,9 @@ public class MentionsTimelineFragment extends TimelineFragment {
                 if (response.length() == 0)  {
                     return;
                 }
-                // This is true when the application loads for the first time.
-                // Done to fill the view and DB with latest tweet objects
-                // (DEFAULT_COUNT - 5) is used to handle the case where endpoint returns 99 objects even though
-                // the COUNT in request was 100
-                if (response.length() >= (DEFAULT_COUNT - 5) && clearDb) {
-                    DbHelper.clearDb();
-                }
                 parsedResponse = Tweet.fromJSONArray(response);
-                // This if block is intentionally kept separate from the above if block.
-                // It is to reduce to delay on UI thread, because UI refreshes as soon as
-                // contents in the adapter change. So, clear and refilling the adapter should
-                // happen back to back.
-                if (parsedResponse.size() >= (DEFAULT_COUNT - 5) && clearDb) {
-                    resetAdapterWithNewTweets(parsedResponse);
-                } else {
-                    appendTweets(parsedResponse, appendEnd);
-                }
+                Log.d("DEBUG", "MentionsTimeline: Value of Parsed response it set: " + parsedResponse.size());
+                appendTweets(parsedResponse, appendEnd);
             }
 
             @Override
@@ -62,7 +47,9 @@ public class MentionsTimelineFragment extends TimelineFragment {
     // Load all mentions tweet from the database
     @Override
     protected void loadFromDb() {
-        String currentUserName = getCurrentUserName();
-        aTweets.addAll(Tweet.getAllMentionsTweet(currentUserName));
+       synchronized (this) {
+           String currentUserName = getCurrentUserName();
+           aTweets.addAll(Tweet.getAllMentionsTweet(currentUserName));
+       }
     }
 }

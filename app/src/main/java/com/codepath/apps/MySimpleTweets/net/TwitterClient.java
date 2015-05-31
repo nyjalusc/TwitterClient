@@ -55,18 +55,13 @@ public class TwitterClient extends OAuthBaseClient {
 		Log.d("DEBUG ", "Preparing params..");
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
-			if (key.equals("count")) {
-				Log.d("DEBUG COUNT", endpointKeyMap.get(key).toString());
-				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
-			} else {
-				String value = endpointKeyMap.get(key);
-				if (value != null) {
-					Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
-					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
-				}
+			if (endpointKeyMap.get(key) != null) {
+				Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
+				params.put(key, endpointKeyMap.get(key));
 			}
 		}
 		Log.d("DEBUG", "executing");
+		Log.d("DEBUG", "Calling " + apiUrl);
 		// Execute the request
 		getClient().get(apiUrl, params, handler);
 	}
@@ -132,17 +127,13 @@ public class TwitterClient extends OAuthBaseClient {
 //		params.put("count", 25);
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
-			if (key.equals("count")) {
-				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
-			} else {
-				String value = endpointKeyMap.get(key);
-				if (value != null) {
-					Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
-					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
-				}
+			if (endpointKeyMap.get(key) != null) {
+				Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
+				params.put(key, endpointKeyMap.get(key));
 			}
 		}
 		// Execute the request
+		Log.d("DEBUG", "Calling " + apiUrl);
 		getClient().get(apiUrl, params, handler);
 	}
 
@@ -152,27 +143,13 @@ public class TwitterClient extends OAuthBaseClient {
 //		params.put("count", 25);
 		Set<String> keys = endpointKeyMap.keySet();
 		for (String key : keys) {
-			if (key.equals("count")) {
-				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
-			} else if (key.equals("screen_name")) {
+			if (endpointKeyMap.get(key) != null) {
+				Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
 				params.put(key, endpointKeyMap.get(key));
-			} else {
-				String value = endpointKeyMap.get(key);
-				if (value != null) {
-					Log.d("DEBUG " + key , endpointKeyMap.get(key).toString());
-					params.put(key, Long.parseLong(endpointKeyMap.get(key)));
-				}
 			}
 		}
 		// Execute the request
-		getClient().get(apiUrl, params, handler);
-	}
-
-	public void getUserInfo(String screenName, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("account/verify_credentials.json");
-		RequestParams params = new RequestParams();
-		params.put("count", 25);
-		params.put("screen_name", screenName);
+		Log.d("DEBUG", "Calling " + apiUrl);
 		getClient().get(apiUrl, params, handler);
 	}
 }

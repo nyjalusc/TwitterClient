@@ -213,6 +213,7 @@ public class Tweet extends Model implements Serializable {
     public static List<Tweet> getAllTweets() {
         List<Tweet> result = new Select()
                 .from(Tweet.class)
+                .orderBy("created_at DESC")
                 .execute();
         Log.d("DEBUG", "Objects read from the db:" + result.size());
         return result;
@@ -234,6 +235,15 @@ public class Tweet extends Model implements Serializable {
                 .from(Tweet.class)
                 .where("body LIKE ?", likeQueryTerm)
                 .execute();
+        return result;
+    }
+
+    public static List<Tweet> getTweetsForuser(User user) {
+        // For some reason the user object received here is not a complete object. It dosen't have an ID.
+        // This is probably a bug. Requires more investigation.
+        // Meanwhile get the full object by looking in the db.
+        User userObject = User.getUser(user.getScreenName().substring(1));
+        List<Tweet> result = new Select().from(Tweet.class).where("user = ?", userObject.getId()).execute();
         return result;
     }
 }
