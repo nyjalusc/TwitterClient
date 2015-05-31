@@ -1,8 +1,11 @@
 package com.codepath.apps.MySimpleTweets.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +14,21 @@ import android.widget.Toast;
 import com.codepath.apps.MySimpleTweets.activities.TwitterApplication;
 import com.codepath.apps.MySimpleTweets.interfaces.EndlessScrollListener;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
+import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.ConnectivityChecker;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class TimelineFragment extends TweetsListFragment {
     protected TwitterClient client;
+    private User currentUser;
     private ConnectivityChecker connectivityChecker;
     protected HashMap<String, String> endpointKeyMap;
     protected int DEFAULT_COUNT = 50;
@@ -61,6 +71,61 @@ public abstract class TimelineFragment extends TweetsListFragment {
         setupViewListeners();
         setupSwipeRefresh();
         return view;
+    }
+
+    // Save the username in shared preferences
+    private void saveCurrentUserName(String userName) {
+        Log.d("DEBUG", "Saving username to pref:" + userName);
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putString("username", userName);
+        edit.commit();
+    }
+
+    // Get the current user details
+    private void getCurrentUserDetails() {
+        if (!networkCheck()) {
+            Log.d("DEBUG", "No internet");
+        }
+        Log.d("DEBUG", "Sending request to find current user details");
+        client.getCurrentUserDetails(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                currentUser = User.fromJSON(response);
+                saveCurrentUserName(currentUser.getScreenName());
+                Log.d("DEBUG", "Success: Found current user details: " + currentUser.getScreenName());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("DEBUG", "Failed to fetch current user details - 1");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", "Failed to fetch current user details - 2");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d("DEBUG", "Failed to fetch current user details - 3");
+            }
+        });
+    }
+
+    // Get the current username
+    protected String getCurrentUserName() {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String username = pref.getString("username", "n/a");
+        Log.d("DEBUG", "Value read from pref: " + username);
+        if (username.equals("n/a")) {
+            getCurrentUserDetails();
+        }
+        String username2 = pref.getString("username", "n/a");
+        Log.d("DEBUG", "Value read from pref after request: " + username2);
+        return username;
     }
 
     private void setupViewListeners() {
@@ -171,6 +236,8 @@ public abstract class TimelineFragment extends TweetsListFragment {
         client = TwitterApplication.getRestClient();
         // initialize Endpoint keymap store
         initEndpointKeyMap();
+        // Loads appropriate tweets in the view
+        loadFromDb();
     }
 
     // Resets the UI with fresh new tweets
@@ -200,4 +267,6 @@ public abstract class TimelineFragment extends TweetsListFragment {
     }
 
     abstract protected void populateTimeline(boolean clearDbFlag, boolean appendEnd);
+
+    abstract protected void loadFromDb();
 }

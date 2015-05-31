@@ -2,6 +2,7 @@ package com.codepath.apps.MySimpleTweets.models;
 
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -169,8 +170,9 @@ public class Tweet extends Model implements Serializable {
 
     public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {
         ArrayList<Tweet> tweets = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
+        ActiveAndroid.beginTransaction();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject tweetJson = jsonArray.getJSONObject(i);
                 Tweet tweet = Tweet.fromJSON(tweetJson);
                 if (tweet != null) {
@@ -179,9 +181,12 @@ public class Tweet extends Model implements Serializable {
                         tweets.add(tweet);
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            ActiveAndroid.setTransactionSuccessful();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            ActiveAndroid.endTransaction();
         }
         return tweets;
     }
@@ -198,6 +203,9 @@ public class Tweet extends Model implements Serializable {
         }
         // It is important to note that user object is saved before the parent object gets saved
         tweet.save();
+        if (tweet.body.contains("@NyjalAugustine")) {
+            Log.d("DEBUG", "Menitons tweet id: " + tweet.getUid() + "");
+        }
         return tweet;
     }
 
@@ -218,5 +226,14 @@ public class Tweet extends Model implements Serializable {
 
     public static Tweet getTweetWithId(long uid) {
         return new Select().from(Tweet.class).where("uid= ?", uid).executeSingle();
+    }
+
+    public static List<Tweet> getAllMentionsTweet(String userName) {
+        String likeQueryTerm = '%' + userName + '%';
+        List<Tweet> result = new Select()
+                .from(Tweet.class)
+                .where("body LIKE ?", likeQueryTerm)
+                .execute();
+        return result;
     }
 }

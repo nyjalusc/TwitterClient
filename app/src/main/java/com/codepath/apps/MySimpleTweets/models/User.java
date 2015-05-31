@@ -1,5 +1,7 @@
 package com.codepath.apps.MySimpleTweets.models;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -9,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Table(name = "Users")
 public class User extends Model implements Serializable {
@@ -94,6 +97,16 @@ public class User extends Model implements Serializable {
     }
 
     public String getFriendsCount() {
+
         return followingsCount;
+    }
+
+    // Reads all tweets from the database
+    public static List<User> getAllUsers() {
+        List<User> result = new Select()
+                .from(User.class)
+                .execute();
+        Log.d("DEBUG", "Objects read from the db:" + result.size());
+        return result;
     }
 }

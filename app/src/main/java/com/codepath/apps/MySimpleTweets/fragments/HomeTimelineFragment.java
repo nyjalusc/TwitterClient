@@ -42,4 +42,9 @@ public class HomeTimelineFragment extends TimelineFragment {
             }
         });
     }
+
+    @Override
+    protected void loadFromDb() {
+        aTweets.addAll(Tweet.getAllTweets());
+    }
 }
