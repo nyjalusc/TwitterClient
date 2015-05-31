@@ -74,6 +74,8 @@ public class UserTimelineFragment extends TweetsListFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         setupViewListeners();
         setupSwipeRefresh();
+        User user = (User) getArguments().getSerializable("user");
+        endpointKeyMap.put("screen_name", user.getScreenName().substring(1));
         return view;
     }
 
@@ -90,8 +92,6 @@ public class UserTimelineFragment extends TweetsListFragment {
     private void init() {
         // Read the tweets from the DB
 //        aTweets.addAll(Tweet.getAllTweets());
-        User user = (User) getArguments().getSerializable("user");
-        endpointKeyMap.put("screen_name", user.getScreenName().substring(1));
         client = TwitterApplication.getRestClient();
         connectivityChecker = new ConnectivityChecker();
         // Singleton client

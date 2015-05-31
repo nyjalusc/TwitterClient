@@ -6,6 +6,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.codepath.apps.MySimpleTweets.Helpers.RelativeIntegers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,8 @@ public class User extends Model implements Serializable {
     private String followersCount;
     @Column(name = "following_count")
     private String followingsCount;
+    @Column(name = "tweets_count")
+    private String tweetsCount;
 
     public String getName() {
         return name;
@@ -58,6 +61,24 @@ public class User extends Model implements Serializable {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public String getFollowersCount() {
+        return followersCount;
+    }
+
+    // Same as "followings" count
+    public String getFriendsCount() {
+        return followingsCount;
+    }
+
+    // Formats the integers to K thousand, M millions, B billions etc.
+    public String getTweetsCount() {
+        return RelativeIntegers.format(Long.parseLong(tweetsCount));
+    }
+
     public static User fromJSON(JSONObject json) {
         User user = new User();
         try {
@@ -68,6 +89,8 @@ public class User extends Model implements Serializable {
             user.tagLine = json.getString("description");
             user.followersCount = json.getString("followers_count");
             user.followingsCount = json.getString("friends_count");
+            user.tweetsCount = json.getString("statuses_count");
+            Log.d("DEBUG", "Relative Integers: " + user.getTweetsCount());
             // Save if New User
             user = saveIfNewUser(user);
         } catch (JSONException e) {
@@ -86,19 +109,6 @@ public class User extends Model implements Serializable {
         }
         user.save();
         return user;
-    }
-
-    public String getTagLine() {
-        return tagLine;
-    }
-
-    public String getFollowersCount() {
-        return followersCount;
-    }
-
-    public String getFriendsCount() {
-
-        return followingsCount;
     }
 
     // Reads all tweets from the database
