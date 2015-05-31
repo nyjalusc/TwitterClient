@@ -147,10 +147,10 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 i.putExtra("user", User.fromJSON(response));
+                // Launch the profile view
+                startActivity(i);
             }
         });
-        // Launch the profile view
-        startActivity(i);
     }
 
     // Returns the order of the fragment in the viewpager

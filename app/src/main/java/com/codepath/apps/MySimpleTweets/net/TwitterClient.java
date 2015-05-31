@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
-	public static final String REST_URL = "https://api.twitter.com/1.1/";
+	public static final String REST_URL = "https://api.twitter.com/1.1";
 	public static final String REST_CONSUMER_KEY = "sACNpXq6KZHYP8uo0wa72gZDT";
 	public static final String REST_CONSUMER_SECRET = "EsAVcafSmHQC1zVPIsbIU4V7CB9B4XiS1A8p0d13DoPxHA4iL2";
 	public static final String REST_CALLBACK_URL = "oauth://njsimpletweets";

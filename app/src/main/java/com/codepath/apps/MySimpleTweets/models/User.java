@@ -90,7 +90,6 @@ public class User extends Model implements Serializable {
             user.followersCount = json.getString("followers_count");
             user.followingsCount = json.getString("friends_count");
             user.tweetsCount = json.getString("statuses_count");
-            Log.d("DEBUG", "Relative Integers: " + user.getTweetsCount());
             // Save if New User
             user = saveIfNewUser(user);
         } catch (JSONException e) {
@@ -108,6 +107,7 @@ public class User extends Model implements Serializable {
             return existingUser;
         }
         user.save();
+        Log.d("DEBUG", "saved user: " + user.screenName);
         return user;
     }
 
@@ -119,4 +119,14 @@ public class User extends Model implements Serializable {
         Log.d("DEBUG", "Objects read from the db:" + result.size());
         return result;
     }
+
+    // Reads all tweets from the database
+    public static User getUser(String screenName) {
+        User result = new Select()
+                .from(User.class)
+                .where("screen_name= ?", screenName)
+                .executeSingle();
+        return result;
+    }
+
 }

@@ -53,7 +53,12 @@ public abstract class TimelineFragment extends TweetsListFragment {
             public String toString() {
                 return "since_id";
             }
+        },
 
+        SCREEN_NAME {
+            public String toString() {
+                return "screen_name";
+            }
         }
     }
 
@@ -61,13 +66,15 @@ public abstract class TimelineFragment extends TweetsListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        populateTimelineAndAppendAtEnd(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        // Loads appropriate tweets in the view
+        loadFromDb();
+        populateTimelineAndAppendAtEnd(true);
         setupViewListeners();
         setupSwipeRefresh();
         return view;
@@ -110,6 +117,16 @@ public abstract class TimelineFragment extends TweetsListFragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                 Log.d("DEBUG", "Failed to fetch current user details - 3");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d("DEBUG", "Success: 2");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d("DEBUG", "Success: 3");
             }
         });
     }
@@ -227,6 +244,7 @@ public abstract class TimelineFragment extends TweetsListFragment {
         endpointKeyMap.put(TimelineParams.COUNT.toString(), DEFAULT_COUNT + "");
         endpointKeyMap.put(TimelineParams.MAX_ID.toString(), null);
         endpointKeyMap.put(TimelineParams.SINCE_ID.toString(), null);
+        endpointKeyMap.put(TimelineParams.SCREEN_NAME.toString(), null);
     }
 
     // Initialize properties
@@ -236,8 +254,6 @@ public abstract class TimelineFragment extends TweetsListFragment {
         client = TwitterApplication.getRestClient();
         // initialize Endpoint keymap store
         initEndpointKeyMap();
-        // Loads appropriate tweets in the view
-        loadFromDb();
     }
 
     // Resets the UI with fresh new tweets

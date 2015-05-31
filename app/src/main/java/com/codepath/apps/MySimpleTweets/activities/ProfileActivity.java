@@ -16,10 +16,13 @@ import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
 import com.squareup.picasso.Picasso;
 
+/**
+ * This activity expects the parent activity to pass the User object through the intent.
+ */
 public class ProfileActivity extends ActionBarActivity {
 
-    TwitterClient client;
-    TextView tvUserName;
+    private TwitterClient client;
+    private TextView tvUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,6 @@ public class ProfileActivity extends ActionBarActivity {
         User user = (User) getIntent().getSerializableExtra("user");
 
         // Set the username on the toolbar
-        tvUserName.setText(user.getScreenName());
         populateProfileHeader(user);
 
         if (savedInstanceState == null) {
@@ -45,6 +47,9 @@ public class ProfileActivity extends ActionBarActivity {
     }
 
     private void populateProfileHeader(User user) {
+        // tvUserName gets initialized from initToolbar()
+        tvUserName.setText(user.getScreenName());
+
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         TextView tvName = (TextView) findViewById(R.id.tvName);
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
@@ -68,7 +73,6 @@ public class ProfileActivity extends ActionBarActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_up_menu);
-
         // Get the reference to textView from the toolbar
         tvUserName = (TextView) findViewById(R.id.tvUserName);
     }
