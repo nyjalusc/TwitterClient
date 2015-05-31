@@ -18,6 +18,12 @@ import com.codepath.apps.MySimpleTweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.MySimpleTweets.fragments.MentionsTimelineFragment;
 import com.codepath.apps.MySimpleTweets.fragments.TweetsListFragment;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
+import com.codepath.apps.MySimpleTweets.models.User;
+import com.codepath.apps.MySimpleTweets.net.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -27,11 +33,13 @@ public class TimelineActivity extends ActionBarActivity {
     private TweetsListFragment tweetsListFragment;
     private TweetsPagerAdapter tweetsPagerAdapter;
     private ViewPager vpPager;
+    private TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        client = TwitterApplication.getRestClient();
         // Initializes the toolbar
         initToolbar();
         setupViewPager();
@@ -133,8 +141,15 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
     public void onProfileView(MenuItem item) {
+        // Get the current User object
+        final Intent i = new Intent(this, ProfileActivity.class);
+        client.getCurrentUserDetails(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                i.putExtra("user", User.fromJSON(response));
+            }
+        });
         // Launch the profile view
-        Intent i = new Intent(this, ProfileActivity.class);
         startActivity(i);
     }
 

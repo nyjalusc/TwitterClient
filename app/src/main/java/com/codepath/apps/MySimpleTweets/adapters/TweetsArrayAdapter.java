@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.apps.MySimpleTweets.R;
+import com.codepath.apps.MySimpleTweets.activities.ProfileActivity;
 import com.codepath.apps.MySimpleTweets.activities.TimelineActivity;
 import com.codepath.apps.MySimpleTweets.activities.TwitterApplication;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
@@ -108,6 +110,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 .error(R.drawable.ic_error)
                 .fit()
                 .into(viewHolder.ivProfileImage);
+        // This will be used in the click listener to figure out the name of the user
+        viewHolder.ivProfileImage.setTag(tweet.getUser().getScreenName());
 
         viewHolder.tvRelativeTime.setText(tweet.getRelativeTime());
         viewHolder.tvBody.setText(tweet.getBody());
@@ -239,6 +243,17 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             public void onClick(View v) {
                 // Accessing activity method from an adapter
                 ((TimelineActivity) getContext()).launchComposeActivityForReply(tweet);
+            }
+        });
+
+        // View listener for showing the profile of user
+        viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Launch the profile activity directly from the fragment
+                Intent i = new Intent(getContext(), ProfileActivity.class);
+                i.putExtra("user", tweet.getUser());
+                ((TimelineActivity) getContext()).startActivity(i);
             }
         });
     }

@@ -14,11 +14,7 @@ import com.codepath.apps.MySimpleTweets.R;
 import com.codepath.apps.MySimpleTweets.fragments.UserTimelineFragment;
 import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
 
 public class ProfileActivity extends ActionBarActivity {
 
@@ -31,20 +27,16 @@ public class ProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_profile);
         initToolbar();
         client = TwitterApplication.getRestClient();
-        client.getUserInfo(null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                User user = User.fromJSON(response);
-                tvUserName.setText(user.getScreenName());
-                populateProfileHeader(user);
-            }
-        });
+        User user = (User) getIntent().getSerializableExtra("user");
 
-        String screenName = getIntent().getStringExtra("screen_name");
+        // Set the username on the toolbar
+        tvUserName.setText(user.getScreenName());
+        populateProfileHeader(user);
+
         if (savedInstanceState == null) {
             // Get the screen name
             // Create user timeline fragment; and pass the data in the fragment
-            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(user);
             // Display the user fragment within the activity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flContainer, userTimelineFragment);

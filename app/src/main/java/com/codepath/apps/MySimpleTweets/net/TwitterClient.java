@@ -154,6 +154,8 @@ public class TwitterClient extends OAuthBaseClient {
 		for (String key : keys) {
 			if (key.equals("count")) {
 				params.put(key, Integer.parseInt(endpointKeyMap.get(key)));
+			} else if (key.equals("screen_name")) {
+				params.put(key, endpointKeyMap.get(key));
 			} else {
 				String value = endpointKeyMap.get(key);
 				if (value != null) {

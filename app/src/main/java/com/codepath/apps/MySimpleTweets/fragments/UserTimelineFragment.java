@@ -13,6 +13,7 @@ import com.codepath.apps.MySimpleTweets.Helpers.DbHelper;
 import com.codepath.apps.MySimpleTweets.activities.TwitterApplication;
 import com.codepath.apps.MySimpleTweets.interfaces.EndlessScrollListener;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
+import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.ConnectivityChecker;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -89,6 +90,8 @@ public class UserTimelineFragment extends TweetsListFragment {
     private void init() {
         // Read the tweets from the DB
 //        aTweets.addAll(Tweet.getAllTweets());
+        User user = (User) getArguments().getSerializable("user");
+        endpointKeyMap.put("screen_name", user.getScreenName().substring(1));
         client = TwitterApplication.getRestClient();
         connectivityChecker = new ConnectivityChecker();
         // Singleton client
@@ -225,7 +228,7 @@ public class UserTimelineFragment extends TweetsListFragment {
     // NOTE: It is the responsibility of the caller to correctly configure the params before
     // calling this method
     private void populateTimeline(final boolean clearDb, final boolean appendEnd) {
-        String screenName = getArguments().getString("screen_name");
+//        String screenName = getArguments().getString("screen_name");
         client.getUserTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -255,10 +258,10 @@ public class UserTimelineFragment extends TweetsListFragment {
     }
 
     // Creates a new fragment given an screenName
-    public static UserTimelineFragment newInstance(String screenName) {
+    public static UserTimelineFragment newInstance(User user) {
         UserTimelineFragment userFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
-        args.putString("screen_name", screenName);
+        args.putSerializable("user", user);
         userFragment.setArguments(args);
         return userFragment;
     }
