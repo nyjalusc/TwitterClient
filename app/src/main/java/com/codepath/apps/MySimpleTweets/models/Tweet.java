@@ -213,7 +213,7 @@ public class Tweet extends Model implements Serializable {
     public static List<Tweet> getAllTweets() {
         List<Tweet> result = new Select()
                 .from(Tweet.class)
-                .orderBy("created_at DESC")
+                .orderBy("uid DESC")
                 .execute();
         Log.d("DEBUG", "Objects read from the db:" + result.size());
         return result;
