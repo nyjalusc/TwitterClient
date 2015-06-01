@@ -1,5 +1,6 @@
 package com.codepath.apps.MySimpleTweets.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,8 @@ import com.codepath.apps.MySimpleTweets.fragments.UserTimelineFragment;
 import com.codepath.apps.MySimpleTweets.models.User;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
 import com.squareup.picasso.Picasso;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * This activity expects the parent activity to pass the User object through the intent.
@@ -46,22 +49,39 @@ public class ProfileActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     private void populateProfileHeader(User user) {
         // tvUserName gets initialized from initToolbar()
         tvUserName.setText(user.getScreenName());
 
+        ImageView ivBannerImage = (ImageView) findViewById(R.id.ivBannerImage);
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         TextView tvName = (TextView) findViewById(R.id.tvName);
-        TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
+//        TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+        TextView tvTweetsCount = (TextView) findViewById(R.id.tvTweetsCount);
 
+        // Set the banner image
+        ivBannerImage.setImageResource(0);
+        if (user.getProfileBannerUrl() == null) {
+            ivBannerImage.setImageResource(R.color.blankBannerColor);
+        } else {
+            Picasso.with(this).load(user.getProfileBannerUrl()).into(ivBannerImage);
+        }
+
+        // Set the profile image
         ivProfileImage.setImageResource(0);
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
         tvName.setText(user.getName());
-        tvTagline.setText(user.getTagLine());
-        tvFollowers.setText(user.getFollowersCount() + " Followers");
-        tvFollowing.setText(user.getFriendsCount() + " Following");
+//        tvTagline.setText(user.getTagLine());
+        tvFollowers.setText(user.getFollowersCount());
+        tvFollowing.setText(user.getFriendsCount());
+        tvTweetsCount.setText(user.getTweetsCount());
     }
 
     // Toolbar is a replacement to the older actionbar
@@ -90,11 +110,6 @@ public class ProfileActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -105,6 +105,9 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     private void setupViews(ViewHolder viewHolder, Tweet tweet) {
         viewHolder.ivProfileImage.setImageResource(0);
+        if (tweet.getUser() == null) {
+            Log.d("DEBUG", "Found NULL User:" + tweet.getBody());
+        }
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
                 .error(R.drawable.ic_error)

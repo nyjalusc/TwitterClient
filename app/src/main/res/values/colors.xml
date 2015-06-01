@@ -4,7 +4,9 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#BDBDBD</color>
+    <color name="dark_grey">#424242</color>
     <color name="green">#8BC34A</color>
     <color name="yellow">#FFC107</color>
     <color name="linkColor">#ff006a95</color>
+    <color name="blankBannerColor">#0277BD</color>
 </resources>

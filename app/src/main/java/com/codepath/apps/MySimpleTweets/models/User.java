@@ -24,6 +24,8 @@ public class User extends Model implements Serializable {
     private String screenName;
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+    @Column(name = "profile_banner_url")
+    private String profileBannerUrl;
     @Column(name = "tag_line")
     private String tagLine;
     @Column(name = "followers_count")
@@ -61,22 +63,26 @@ public class User extends Model implements Serializable {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public String getProfileBannerUrl() {
+        return profileBannerUrl;
+    }
+
     public String getTagLine() {
         return tagLine;
     }
 
     public String getFollowersCount() {
-        return followersCount;
+        return RelativeIntegers.format(Long.parseLong(followersCount)).toUpperCase();
     }
 
     // Same as "followings" count
     public String getFriendsCount() {
-        return followingsCount;
+        return RelativeIntegers.format(Long.parseLong(followingsCount)).toUpperCase();
     }
 
     // Formats the integers to K thousand, M millions, B billions etc.
     public String getTweetsCount() {
-        return RelativeIntegers.format(Long.parseLong(tweetsCount));
+        return RelativeIntegers.format(Long.parseLong(tweetsCount)).toUpperCase();
     }
 
     public static User fromJSON(JSONObject json) {
@@ -90,6 +96,9 @@ public class User extends Model implements Serializable {
             user.followersCount = json.getString("followers_count");
             user.followingsCount = json.getString("friends_count");
             user.tweetsCount = json.getString("statuses_count");
+            if (!json.isNull("profile_banner_url")) {
+                user.profileBannerUrl = json.getString("profile_banner_url");
+            }
             // Save if New User
             user = saveIfNewUser(user);
         } catch (JSONException e) {

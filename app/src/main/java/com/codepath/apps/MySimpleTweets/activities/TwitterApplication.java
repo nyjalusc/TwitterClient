@@ -27,6 +27,7 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 				.setFontAttrId(R.attr.fontPath)
 				.build());
 		TwitterApplication.context = this;
+//		DbHelper.clearDb();
 	}
 
 	public static TwitterClient getRestClient() {
