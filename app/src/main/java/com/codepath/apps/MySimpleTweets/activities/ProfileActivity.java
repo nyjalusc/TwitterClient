@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets.activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -31,9 +32,9 @@ public class ProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        initToolbar();
         client = TwitterApplication.getRestClient();
         User user = (User) getIntent().getSerializableExtra("user");
+        initToolbar(user);
 
         // Set the username on the toolbar
         populateProfileHeader(user);
@@ -85,10 +86,12 @@ public class ProfileActivity extends ActionBarActivity {
     }
 
     // Toolbar is a replacement to the older actionbar
-    private void initToolbar() {
+    private void initToolbar(User user) {
         // Set a toolbar to replace the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(Color.parseColor(user.getProfileBackgroundColor()));
+
         // Set the home icon on toolbar
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);

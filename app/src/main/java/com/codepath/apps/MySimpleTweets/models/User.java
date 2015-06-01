@@ -34,6 +34,8 @@ public class User extends Model implements Serializable {
     private String followingsCount;
     @Column(name = "tweets_count")
     private String tweetsCount;
+    @Column(name = "profile_background_color")
+    private String profileBackgroundColor;
 
     public String getName() {
         return name;
@@ -75,6 +77,11 @@ public class User extends Model implements Serializable {
         return RelativeIntegers.format(Long.parseLong(followersCount)).toUpperCase();
     }
 
+    // Used for setting color of toolbar; By default setting it to 25% transparency
+    public String getProfileBackgroundColor() {
+        return "#4D" + profileBackgroundColor;
+    }
+
     // Same as "followings" count
     public String getFriendsCount() {
         return RelativeIntegers.format(Long.parseLong(followingsCount)).toUpperCase();
@@ -96,6 +103,7 @@ public class User extends Model implements Serializable {
             user.followersCount = json.getString("followers_count");
             user.followingsCount = json.getString("friends_count");
             user.tweetsCount = json.getString("statuses_count");
+            user.profileBackgroundColor = json.getString("profile_background_color");
             if (!json.isNull("profile_banner_url")) {
                 user.profileBannerUrl = json.getString("profile_banner_url");
             }
