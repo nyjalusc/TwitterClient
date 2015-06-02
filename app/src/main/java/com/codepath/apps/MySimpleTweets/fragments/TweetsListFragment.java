@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.codepath.apps.MySimpleTweets.R;
 import com.codepath.apps.MySimpleTweets.adapters.TweetsArrayAdapter;
 import com.codepath.apps.MySimpleTweets.models.Tweet;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -21,11 +22,13 @@ public class TweetsListFragment extends Fragment {
     protected TweetsArrayAdapter aTweets;
     protected ListView lvTweets;
     protected SwipeRefreshLayout swipeContainer;
+    protected ProgressWheel progressWheel;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tweets_list, container, false);
+        progressWheel = (ProgressWheel) view.findViewById(R.id.pbLoading);
         lvTweets = (ListView) view.findViewById(R.id.lvTweets);
         lvTweets.setAdapter(aTweets);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);

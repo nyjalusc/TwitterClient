@@ -38,6 +38,8 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     // tabs
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    // Custom progressbar
+    compile 'com.pnikosis:materialish-progress:1.5'
 }
 
 repositories {

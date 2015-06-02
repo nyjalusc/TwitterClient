@@ -2,6 +2,7 @@ package com.codepath.apps.MySimpleTweets.fragments;
 
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.codepath.apps.MySimpleTweets.models.Tweet;
 import com.codepath.apps.MySimpleTweets.models.User;
@@ -19,15 +20,18 @@ public class UserTimelineFragment extends TimelineFragment {
         // Add two extra params "user_id" and "screen_name" which are unique to usertimeline endpoint
         endpointKeyMap.put("screen_name", user.getScreenName().substring(1));
         endpointKeyMap.put("user_id", user.getUid() + "");
+        progressWheel.setVisibility(View.VISIBLE);
         client.getUserTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 parsedResponse = Tweet.fromJSONArray(response);
                 appendTweets(parsedResponse, appendEnd);
+                progressWheel.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                progressWheel.setVisibility(View.INVISIBLE);
             }
         });
     }

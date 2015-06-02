@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -9,10 +11,17 @@
         android:layout_height="match_parent"
         android:id="@+id/swipeContainer"
         android:layout_below="@+id/toolbar">
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lvTweets"/>
-
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lvTweets"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/pbLoading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        wheel:matProg_barColor="@color/twitter_blue"
+        wheel:matProg_progressIndeterminate="true" />
+</RelativeLayout>
