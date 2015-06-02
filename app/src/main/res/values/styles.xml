@@ -21,6 +21,7 @@
 
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="android:colorPrimaryDark">@color/twitter_blue_dark</item>
+        <item name="android:colorButtonNormal">@color/twitter_blue</item>
 
         <!--&lt;!&ndash; colorAccent is used as the default value for colorControlActivated-->
              <!--which is used to tint widgets &ndash;&gt;-->
