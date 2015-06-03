@@ -33,10 +33,6 @@ The following **additional** features are implemented:
 * [x] Used Calligraphy library for custom fonts
 * [x] Played with activity transitions. Applied "bottom-up" transition when going from Main Activity => Compose Activity
 
-## Gif Walkthrough 
-
-![alt tag](https://github.com/nyjalusc/TwitterClient/blob/master/walkthrough.gif)
-
 ## Update TwitterClient 0.2
 * [x] User can switch between Timeline and Mention views using tabs.
   * [x] User can view their home timeline tweets.
@@ -57,6 +53,12 @@ The following advanced user stories were also implemented:
 * [x] User can take favorite (and unfavorite) or reweet (and un-retweet) actions on a tweet
 * [x] Improve the user interface and theme the app to feel twitter branded
 
+## Gif Walkthrough 
+![alt tag](https://github.com/nyjalusc/TwitterClient/blob/master/walkthrough2.gif)
+
+Link to the high-res video can be found [here](https://cloud.app.box.com/s/f91zq1rip67orjszodmpcjdr2hdpnwek).
+
+Older version Walkthrough can be found [here](https://github.com/nyjalusc/TwitterClient/blob/master/walkthrough.gif)
 
 ## Open-source libraries used
 
