@@ -15,6 +15,10 @@ public class HomeTimelineFragment extends TimelineFragment {
     @Override
     protected void populateTimeline(final boolean clearDb, final boolean appendEnd) {
         progressWheel.setVisibility(View.VISIBLE);
+        if (!networkCheck()) {
+            progressWheel.setVisibility(View.INVISIBLE);
+            return;
+        }
         client.getHomeTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

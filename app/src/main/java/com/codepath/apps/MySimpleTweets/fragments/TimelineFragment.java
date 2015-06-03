@@ -103,9 +103,8 @@ public abstract class TimelineFragment extends TweetsListFragment {
     // Get the current user details
     private void getCurrentUserDetails() {
         if (!networkCheck()) {
-            Log.d("DEBUG", "No internet");
+            return;
         }
-        Log.d("DEBUG", "Sending request to find current user details");
         client.getCurrentUserDetails(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -174,7 +173,7 @@ public abstract class TimelineFragment extends TweetsListFragment {
     }
 
     // Check for network connectivity
-    private boolean networkCheck() {
+    protected boolean networkCheck() {
         if (!connectivityChecker.isNetworkAvailable(getActivity())) {
 //            showAlertDialog("No internet", "It looks like you have lost network connectivity");
             Toast.makeText(getActivity(), "No internet", Toast.LENGTH_SHORT).show();

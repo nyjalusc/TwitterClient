@@ -18,6 +18,10 @@ public class MentionsTimelineFragment extends TimelineFragment {
     @Override
     protected void populateTimeline(final boolean clearDb, final boolean appendEnd) {
         progressWheel.setVisibility(View.VISIBLE);
+        if (!networkCheck()) {
+            progressWheel.setVisibility(View.INVISIBLE);
+            return;
+        }
         client.getMentionsTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -34,6 +38,7 @@ public class MentionsTimelineFragment extends TimelineFragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("DEBUG", "Failed");
+                throwable.printStackTrace();
                 progressWheel.setVisibility(View.INVISIBLE);
             }
 

@@ -17,10 +17,14 @@ public class UserTimelineFragment extends TimelineFragment {
 
     @Override
     protected void populateTimeline(final boolean clearDb, final boolean appendEnd) {
+        progressWheel.setVisibility(View.VISIBLE);
+        if (!networkCheck()) {
+            progressWheel.setVisibility(View.INVISIBLE);
+            return;
+        }
         // Add two extra params "user_id" and "screen_name" which are unique to usertimeline endpoint
         endpointKeyMap.put("screen_name", user.getScreenName().substring(1));
         endpointKeyMap.put("user_id", user.getUid() + "");
-        progressWheel.setVisibility(View.VISIBLE);
         client.getUserTimeline(endpointKeyMap, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

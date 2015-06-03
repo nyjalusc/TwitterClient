@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.codepath.apps.MySimpleTweets.R;
 import com.codepath.apps.MySimpleTweets.net.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+import com.squareup.picasso.Picasso;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
@@ -15,6 +17,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		ImageView ivLoginBackground = (ImageView) findViewById(R.id.ivLoginBackground);
+		Picasso.with(this).load(R.drawable.login_background).fit().centerCrop().into(ivLoginBackground);
 	}
 
 
