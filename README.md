@@ -29,8 +29,6 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 * [x] Used a custom toolbar instead of the stock actionbar
-* [x] User can Retweet and undo a retweet
-* [x] User can mark a tweet as favorite and also undo it
 * [x] User can see embedded images within home timeline stream
 * [x] Used Calligraphy library for custom fonts
 * [x] Played with activity transitions. Applied "bottom-up" transition when going from Main Activity => Compose Activity
@@ -39,9 +37,31 @@ The following **additional** features are implemented:
 
 ![alt tag](https://github.com/nyjalusc/TwitterClient/blob/master/walkthrough.gif)
 
+## Update TwitterClient 0.2
+* [x] User can switch between Timeline and Mention views using tabs.
+  * [x] User can view their home timeline tweets.
+  * [x] User can view the recent mentions of their username.
+* [x] User can navigate to view their own profile
+  * [x] User can see picture, # of followers, # of following, and tweets on their profile.
+* [x] User can click on the profile image in any tweet to see another user's profile.
+  * [x] User can see picture, # of followers, # of following, and tweets of clicked user.
+  * [x] Profile view should include that user's timeline
+* [x] User can infinitely paginate any of these timelines (home, mentions, user) by scrolling to the bottom
+
+The following advanced user stories were also implemented:
+* [x] Robust error handling, check if internet is available, handle error cases, network failures
+* [x] When a network request is sent, user sees an indeterminate progress indicator
+* [x] User can see see a banner image on user profile
+* [x] User can "reply" to any tweet on their home timeline
+  * [x] The user that wrote the original tweet is automatically "@" replied in compose
+* [x] User can take favorite (and unfavorite) or reweet (and un-retweet) actions on a tweet
+* [x] Improve the user interface and theme the app to feel twitter branded
+
+
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
 - [Calligraphy](https://github.com/chrisjenx/Calligraphy) - Custom fonts
 - [ActiveAndroid](http://www.activeandroid.com/) - Persist tweets in SQLite for offline viewing
+- [Material-ish Progress](https://github.com/pnikosis/materialish-progress) - Material design inspired progressbar
